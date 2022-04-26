@@ -78,7 +78,7 @@ public class Player : MonoBehaviour
             move.y = jumpStrength;
         }
 
-        if (Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.A) && touchedLeftWall && playertype == Playertype.Player1)
+        if (Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.A) && touchedLeftWall)
         {
             move.y = jumpStrength;
             move.x = speed;
@@ -86,7 +86,7 @@ public class Player : MonoBehaviour
             StartCoroutine(CanMoveAgain(0.5f));
         }
 
-        if (Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.D) && touchedRightWall && playertype == Playertype.Player1)
+        if (Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.D) && touchedRightWall)
         {
             move.y = jumpStrength;
             move.x = -speed;
@@ -116,9 +116,9 @@ public class Player : MonoBehaviour
 
         #region WalljumpingCheck
 
-        if (Physics.Raycast(transform.position + new Vector3(0, 1, 0), transform.TransformDirection(Vector3.left), out hit, 1f, ~layerMask))
+        if (Physics.Raycast(transform.position + new Vector3(0, 1, 0), transform.TransformDirection(-transform.right), out hit, 1f, ~layerMask))
         {
-            Debug.DrawRay(transform.position + new Vector3(0, 2, 0), transform.TransformDirection(Vector3.left) * hit.distance, Color.red);
+            Debug.DrawRay(transform.position + new Vector3(0, 1, 0), transform.TransformDirection(-transform.right) * hit.distance, Color.red);
             touchedLeftWall = true;
         }
         else
@@ -126,9 +126,9 @@ public class Player : MonoBehaviour
             touchedLeftWall = false;
         }
 
-        if (Physics.Raycast(transform.position + new Vector3(0, 1, 0), transform.TransformDirection(Vector3.right), out hit, 1f, ~layerMask))
+        if (Physics.Raycast(transform.position + new Vector3(0, 1, 0), transform.TransformDirection(transform.right), out hit, 1f, ~layerMask))
         {
-            Debug.DrawRay(transform.position + new Vector3(0, 1, 0), transform.TransformDirection(Vector3.right) * hit.distance, Color.red);
+            Debug.DrawRay(transform.position + new Vector3(0, 1, 0), transform.TransformDirection(transform.right) * hit.distance, Color.red);
             touchedRightWall = true;
         }
         else
