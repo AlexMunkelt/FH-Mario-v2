@@ -102,9 +102,9 @@ public class Player : MonoBehaviour
 
         RaycastHit hit;
 
-        if (Physics.Raycast(transform.position + new Vector3(0, 1, 0), transform.TransformDirection(Vector3.down), out hit, 1f, ~layerMask))
+        if (Physics.Raycast(transform.position + new Vector3(0, 1, 0), transform.TransformDirection(-transform.up), out hit, 1f, ~layerMask))
         {
-            Debug.DrawRay(transform.position + new Vector3(0, 1, 0), transform.TransformDirection(Vector3.down) * hit.distance, Color.red);
+            Debug.DrawRay(transform.position + new Vector3(0, 1, 0), transform.TransformDirection(-transform.up) * hit.distance, Color.red);
             isGrounded = true;
         }
         else
