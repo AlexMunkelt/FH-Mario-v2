@@ -56,10 +56,12 @@ public class Player : MonoBehaviour
         {
             if (hor > 0)
             {
-                model.transform.rotation = Quaternion.Euler(0, -90, 0);
+                //model.transform.rotation = Quaternion.Euler(0, -90, 0);
+                this.transform.rotation = Quaternion.Euler(0, -90, 0);
             } else if (hor < 0)
             {
-                model.transform.rotation = Quaternion.Euler(0, 90, 0);
+                //model.transform.rotation = Quaternion.Euler(0, 90, 0);
+                this.transform.rotation = Quaternion.Euler(0, 90, 0);
             }
 
             move.x = hor * speed;
