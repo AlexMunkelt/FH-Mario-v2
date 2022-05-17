@@ -148,7 +148,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2336284592980264789, guid: d2114ef1c309b104fad87d89be131262, type: 3}
       propertyPath: jumpStrength
-      value: 10
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2336284592980264789, guid: d2114ef1c309b104fad87d89be131262, type: 3}
       propertyPath: layerMask.m_Bits
@@ -875,7 +875,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2336284592980264789, guid: d2114ef1c309b104fad87d89be131262, type: 3}
       propertyPath: jumpStrength
-      value: 10
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 3770426837765192940, guid: d2114ef1c309b104fad87d89be131262, type: 3}
       propertyPath: m_Name

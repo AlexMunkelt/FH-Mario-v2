@@ -18,6 +18,7 @@ public class Player : MonoBehaviour
     private State state = State.Idle;
     private Rigidbody rb;
     private bool isGrounded = false;
+    private bool isJumping = false;
     private bool touchedLeftWall = false;
     private bool touchedRightWall = false;
     private bool canMove = true;
@@ -70,29 +71,40 @@ public class Player : MonoBehaviour
 
         if (Input.GetKey(KeyCode.W) && isGrounded && playertype == Playertype.Player1)
         {
-            move.y = jumpStrength;
+            if (!isJumping)
+            {
+                rb.AddForce(new Vector2(0, 1 * jumpStrength), ForceMode.Impulse);
+                isJumping = true;
+            }
+            //move.y = jumpStrength;
         }
 
         if (Input.GetKey(KeyCode.UpArrow) && isGrounded && playertype == Playertype.Player2)
         {
-            move.y = jumpStrength;
+            if (!isJumping)
+            {
+                rb.AddForce(new Vector2(0, 1 * jumpStrength), ForceMode.Impulse);
+                isJumping = true;
+            }
+            //move.y = jumpStrength;
         }
 
-        if (Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.A) && touchedLeftWall)
-        {
-            move.y = jumpStrength;
-            move.x = speed;
+        // Walljumping
+        //if (Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.A) && touchedLeftWall)
+        //{
+        //    move.y = jumpStrength;
+        //    move.x = speed;
 
-            StartCoroutine(CanMoveAgain(0.5f));
-        }
+        //    StartCoroutine(CanMoveAgain(0.5f));
+        //}
 
-        if (Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.D) && touchedRightWall)
-        {
-            move.y = jumpStrength;
-            move.x = -speed;
+        //if (Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.D) && touchedRightWall)
+        //{
+        //    move.y = jumpStrength;
+        //    move.x = -speed;
 
-            StartCoroutine(CanMoveAgain(0.5f));
-        }
+        //    StartCoroutine(CanMoveAgain(0.5f));
+        //}
 
         rb.velocity = Vector3.Lerp(rb.velocity, move, 1f);
 
@@ -106,6 +118,7 @@ public class Player : MonoBehaviour
         {
             Debug.DrawRay(transform.position + new Vector3(0, 1, 0), transform.TransformDirection(-transform.up) * hit.distance, Color.red);
             isGrounded = true;
+            isJumping = false;
         }
         else
         {
