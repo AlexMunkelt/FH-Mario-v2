@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public GameObject model;
+    public GameObject[] runAnimations;
+    public GameObject[] jumpAnimations;
+    public GameObject[] idleAnimations;
 
     public Playertype playertype;
     public float speed = 1f;
@@ -23,11 +25,15 @@ public class Player : MonoBehaviour
     private bool touchedRightWall = false;
     private bool canMove = true;
 
+    private int runIndex = 0;
+
     private Vector3 move = Vector3.zero;
 
     void Start()
     {
         rb = this.GetComponent<Rigidbody>();
+
+        StartCoroutine(Animation());
     }
 
     void Update()
@@ -56,15 +62,22 @@ public class Player : MonoBehaviour
         {
             if (hor > 0)
             {
-                //model.transform.rotation = Quaternion.Euler(0, -90, 0);
                 this.transform.rotation = Quaternion.Euler(0, -90, 0);
             } else if (hor < 0)
             {
-                //model.transform.rotation = Quaternion.Euler(0, 90, 0);
                 this.transform.rotation = Quaternion.Euler(0, 90, 0);
             }
 
             move.x = hor * speed;
+        }
+
+        if (move.x != 0 && isGrounded)
+        {
+            state = State.Running;
+        }
+        else if (isGrounded)
+        {
+            state = State.Idle;
         }
 
         #endregion
@@ -77,6 +90,8 @@ public class Player : MonoBehaviour
             {
                 rb.AddForce(new Vector2(0, 1 * jumpStrength), ForceMode.Impulse);
                 isJumping = true;
+
+                state = State.Jumping;
             }
             //move.y = jumpStrength;
         }
@@ -87,6 +102,8 @@ public class Player : MonoBehaviour
             {
                 rb.AddForce(new Vector2(0, 1 * jumpStrength), ForceMode.Impulse);
                 isJumping = true;
+
+                state = State.Jumping;
             }
             //move.y = jumpStrength;
         }
@@ -152,6 +169,53 @@ public class Player : MonoBehaviour
         }
 
         #endregion
+    }
+
+    private IEnumerator Animation()
+    {
+        yield return new WaitForSeconds(0.1f);
+
+        switch (state)
+        {
+            case State.Idle:
+                ClearAnimations();
+                idleAnimations[0].SetActive(true);
+                break;
+            case State.Running:
+                yield return new WaitForSeconds(0.1f);
+
+                ClearAnimations();
+
+                runAnimations[runIndex].SetActive(true);
+
+                if (runIndex == 0)
+                {
+                    runIndex = 1;
+                }
+                else
+                {
+                    runIndex = 0;
+                }
+                break;
+            case State.Jumping:
+                ClearAnimations();
+                jumpAnimations[0].SetActive(true);
+                break;
+            default:
+                break;
+        }
+
+        StartCoroutine(Animation());
+    }
+
+    private void ClearAnimations()
+    {
+        idleAnimations[0].SetActive(false);
+
+        runAnimations[0].SetActive(false);
+        runAnimations[1].SetActive(false);
+
+        jumpAnimations[0].SetActive(false);
     }
 
     private IEnumerator CanMoveAgain(float timeUntilMoveAgain)

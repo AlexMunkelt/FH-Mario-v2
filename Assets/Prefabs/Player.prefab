@@ -53,7 +53,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c316ff7f2e23e9649b60c78dcb92ae5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  model: {fileID: 5322961031930348597}
+  runAnimations:
+  - {fileID: 5322961031930348597}
+  - {fileID: 5915288364233744430}
+  jumpAnimations:
+  - {fileID: 4941059144676866174}
+  idleAnimations:
+  - {fileID: 6152999803633860051}
   playertype: 0
   speed: 10
   acceleration: 10
