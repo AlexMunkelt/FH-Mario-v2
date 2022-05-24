@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.TestTools;
 
 public class Player : MonoBehaviour
 {
@@ -34,6 +35,8 @@ public class Player : MonoBehaviour
         rb = this.GetComponent<Rigidbody>();
 
         StartCoroutine(Animation());
+
+        HorizontalMovementTest();
     }
 
     void Update()
@@ -226,4 +229,30 @@ public class Player : MonoBehaviour
 
         canMove = true;
     }
+
+    #region UnitTests
+
+    public void HorizontalMovementTest()
+    {
+        try
+        {
+            Input.GetAxis("Player1");
+            Input.GetAxis("Player2");
+        }
+        catch (System.Exception)
+        {
+            print("UNIT TEST HOR MOV: FALSE!");
+            return;
+        }
+
+        if (speed > 0)
+        {
+            print("UNIT TEST HOR MOV: TRUE!");
+        } else
+        {
+            print("UNIT TEST HOR MOV: FALSE!");
+        }
+    }
+
+    #endregion
 }
