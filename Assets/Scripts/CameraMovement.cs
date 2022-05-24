@@ -16,6 +16,8 @@ public class CameraMovement : MonoBehaviour
     private Vector3 Middle_Vec;
     
     private Vector3 Camera_Pos;
+
+    private float expand_collider_box = 2.5f;
     
 
     private float MinFOV;
@@ -43,23 +45,24 @@ public class CameraMovement : MonoBehaviour
     private void StopPlayer(GameObject Player)
     {
         //when player is at the right edge of the screen
-        if (Player.transform.position.x > Camera.main.transform.position.x + Camera.main.orthographicSize)
+        if (Player.transform.position.x > Camera.main.transform.position.x + Camera.main.orthographicSize + expand_collider_box)
         {
             //lock position of camera
             Camera.main.transform.position = Camera_Pos;
+            
             //get max x position of the camera view
-            float maxX = Camera.main.transform.position.x + Camera.main.orthographicSize;
+            float maxX = Camera.main.transform.position.x + Camera.main.orthographicSize + expand_collider_box;
             //prevent player from moving to right
             Player.transform.position = new Vector3(maxX, Player.transform.position.y, Player.transform.position.z);
             
         }
         //when player is at the left edge of the screen
-        else if (Player.transform.position.x < Camera.main.transform.position.x - Camera.main.orthographicSize)
+        else if (Player.transform.position.x < Camera.main.transform.position.x - Camera.main.orthographicSize - expand_collider_box)
         {
             //lock position of camera
             Camera.main.transform.position = Camera_Pos;
             //get min x position of the camera view
-            float minX = Camera.main.transform.position.x - Camera.main.orthographicSize;
+            float minX = Camera.main.transform.position.x - Camera.main.orthographicSize - expand_collider_box;
             //prevent player from moving to left
             Player.transform.position = new Vector3(minX, Player.transform.position.y, Player.transform.position.z);
         }
