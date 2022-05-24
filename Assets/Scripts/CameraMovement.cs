@@ -1,14 +1,12 @@
-using System;
-using System.Collections;
 using static System.Math;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.ProBuilder;
 
 public class CameraMovement : MonoBehaviour
 {
     [SerializeField] private int MaxFOV = 40;
-    [Range(-1f, 0f), SerializeField] private float Dropdown_speed = -0.25f;
+    [SerializeField] private float expandColliderBox = 2f;
+    
     private GameObject Player1;
 
     private GameObject Player2;
@@ -17,8 +15,6 @@ public class CameraMovement : MonoBehaviour
     
     private Vector3 Camera_Pos;
 
-    private float expand_collider_box = 2.5f;
-    
 
     private float MinFOV;
     // Start is called before the first frame update
@@ -45,24 +41,24 @@ public class CameraMovement : MonoBehaviour
     private void StopPlayer(GameObject Player)
     {
         //when player is at the right edge of the screen
-        if (Player.transform.position.x > Camera.main.transform.position.x + Camera.main.orthographicSize + expand_collider_box)
+        if (Player.transform.position.x > Camera.main.transform.position.x + Camera.main.orthographicSize + expandColliderBox)
         {
             //lock position of camera
             Camera.main.transform.position = Camera_Pos;
             
             //get max x position of the camera view
-            float maxX = Camera.main.transform.position.x + Camera.main.orthographicSize + expand_collider_box;
+            float maxX = Camera.main.transform.position.x + Camera.main.orthographicSize + expandColliderBox;
             //prevent player from moving to right
             Player.transform.position = new Vector3(maxX, Player.transform.position.y, Player.transform.position.z);
             
         }
         //when player is at the left edge of the screen
-        else if (Player.transform.position.x < Camera.main.transform.position.x - Camera.main.orthographicSize - expand_collider_box)
+        else if (Player.transform.position.x < Camera.main.transform.position.x - Camera.main.orthographicSize - expandColliderBox)
         {
             //lock position of camera
             Camera.main.transform.position = Camera_Pos;
             //get min x position of the camera view
-            float minX = Camera.main.transform.position.x - Camera.main.orthographicSize - expand_collider_box;
+            float minX = Camera.main.transform.position.x - Camera.main.orthographicSize - expandColliderBox;
             //prevent player from moving to left
             Player.transform.position = new Vector3(minX, Player.transform.position.y, Player.transform.position.z);
         }
