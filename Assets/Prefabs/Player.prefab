@@ -61,12 +61,14 @@ MonoBehaviour:
   idleAnimations:
   - {fileID: 6152999803633860051}
   playertype: 0
-  speed: 10
+  speed: 5
   acceleration: 10
   jumpStrength: 3
   layerMask:
     serializedVersion: 2
     m_Bits: 64
+  canMove: 1
+  canJump: 1
 --- !u!65 &7249295012814876158
 BoxCollider:
   m_ObjectHideFlags: 0
