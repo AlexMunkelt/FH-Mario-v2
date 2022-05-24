@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class toggleCoop : MonoBehaviour
+public class ToggleCoop : MonoBehaviour
 {
     public GameObject textSolo, textCoop, StoreCoop;
     bool coop = false;
