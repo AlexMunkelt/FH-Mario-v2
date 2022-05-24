@@ -1236,7 +1236,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 791668385}
-        m_TargetAssemblyTypeName: selectLevel, Assembly-CSharp
+        m_TargetAssemblyTypeName: SelectLevel, Assembly-CSharp
         m_MethodName: ToLevelMenu
         m_Mode: 1
         m_Arguments:
