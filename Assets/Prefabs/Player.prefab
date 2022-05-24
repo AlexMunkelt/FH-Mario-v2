@@ -53,11 +53,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c316ff7f2e23e9649b60c78dcb92ae5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  model: {fileID: 5322961031930348597}
+  runAnimations:
+  - {fileID: 5322961031930348597}
+  - {fileID: 5915288364233744430}
+  jumpAnimations:
+  - {fileID: 4941059144676866174}
+  idleAnimations:
+  - {fileID: 6152999803633860051}
   playertype: 0
   speed: 10
   acceleration: 10
-  jumpStrength: 10
+  jumpStrength: 1
   layerMask:
     serializedVersion: 2
     m_Bits: 64
@@ -72,7 +78,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 3.5, z: 2}
+  m_Size: {x: 1, y: 3.6, z: 2}
   m_Center: {x: 0.2, y: 1.8, z: 0.3}
 --- !u!54 &2491404657134477602
 Rigidbody:
