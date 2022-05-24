@@ -14,6 +14,11 @@ public class CameraMovement : MonoBehaviour
     private GameObject Player2;
 
     private Vector3 Middle_Vec;
+    
+    private Vector3 Camera_Pos;
+
+    private float expand_collider_box = 2.5f;
+    
 
     private float MinFOV;
     // Start is called before the first frame update
@@ -35,20 +40,35 @@ public class CameraMovement : MonoBehaviour
         collider.size = new Vector3(Camera.main.orthographicSize * 2, Camera.main.orthographicSize * 2, 1);
         collider.center = new Vector3(0, 0, 0);
     }
-    
+
     //stop player if at the edge of the screen
     private void StopPlayer(GameObject Player)
     {
-        Collider Camera_Collider = Camera.main.GetComponent<Collider>();
-        Collider Player_Collider = Player.GetComponent<Collider>();
-        
-        
-        //if player is at the edge of the screen
-        if (Player_Collider.bounds.max.x > Camera_Collider.bounds.max.x || Player_Collider.bounds.min.x < Camera_Collider.bounds.min.x ||
-            Player_Collider.bounds.max.y > Camera_Collider.bounds.max.y || Player_Collider.bounds.min.y < Camera_Collider.bounds.min.y)
+        //when player is at the right edge of the screen
+        if (Player.transform.position.x > Camera.main.transform.position.x + Camera.main.orthographicSize + expand_collider_box)
         {
-            //change player x position by -1
-            Player.transform.position = new Vector3(Player.transform.position.x - 1, Player.transform.position.y, Player.transform.position.z);
+            //lock position of camera
+            Camera.main.transform.position = Camera_Pos;
+            
+            //get max x position of the camera view
+            float maxX = Camera.main.transform.position.x + Camera.main.orthographicSize + expand_collider_box;
+            //prevent player from moving to right
+            Player.transform.position = new Vector3(maxX, Player.transform.position.y, Player.transform.position.z);
+            
+        }
+        //when player is at the left edge of the screen
+        else if (Player.transform.position.x < Camera.main.transform.position.x - Camera.main.orthographicSize - expand_collider_box)
+        {
+            //lock position of camera
+            Camera.main.transform.position = Camera_Pos;
+            //get min x position of the camera view
+            float minX = Camera.main.transform.position.x - Camera.main.orthographicSize - expand_collider_box;
+            //prevent player from moving to left
+            Player.transform.position = new Vector3(minX, Player.transform.position.y, Player.transform.position.z);
+        }
+        else
+        {
+            Camera_Pos = Camera.main.transform.position;
         }
     }
 
@@ -97,20 +117,9 @@ public class CameraMovement : MonoBehaviour
             Camera.main.fieldOfView = fov;
         }
         //iterate through players
-        /*foreach (var Player in Players)
+        foreach (var Player in Players)
         {
             StopPlayer(Player);
-        }*/
-        /*float aspect = (
-            Player1.transform.position.x > Player2.transform.position.x
-                ? Player1.transform.position.x - Player2.transform.position.x
-                : Player2.transform.position.x - Player1.transform.position.x) / (
-            Player1.transform.position.y > Player2.transform.position.y
-                ? Player1.transform.position.y - Player2.transform.position.y
-                : Player2.transform.position.y - Player1.transform.position.y);
-        if (aspect > MinAspect)
-        {
-            Camera.main.aspect = aspect;
-        }*/
+        }
     }
 }
