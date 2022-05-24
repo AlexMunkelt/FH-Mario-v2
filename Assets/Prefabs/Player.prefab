@@ -63,7 +63,7 @@ MonoBehaviour:
   playertype: 0
   speed: 10
   acceleration: 10
-  jumpStrength: 1
+  jumpStrength: 3
   layerMask:
     serializedVersion: 2
     m_Bits: 64
