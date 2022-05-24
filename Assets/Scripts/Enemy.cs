@@ -26,7 +26,7 @@ public class Enemy : MonoBehaviour
         {
             if (go.transform.position.y > this.transform.position.y + 1)
             {
-                go.GetComponent<Player>().Jump(3f);
+                go.GetComponent<Player>().Jump(4f);
                 Death();
             }
         }
