@@ -76,13 +76,16 @@ public class Player : MonoBehaviour
             move.x = hor * speed;
         }
 
-        if (move.x != 0 && isGrounded)
+        if (move.x != 0 && isGrounded && !isJumping)
         {
             state = State.Running;
         }
-        else if (isGrounded)
+        else if (isGrounded && !isJumping)
         {
             state = State.Idle;
+        } else
+        {
+            state = State.Jumping;
         }
 
         rb.velocity = Vector3.Lerp(rb.velocity, move, 1f);
