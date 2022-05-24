@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 33332022721547664}
   - component: {fileID: 23642925459528202}
   - component: {fileID: 65174547276535818}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: Neo_Floor_Ceiling_02_snaps001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
