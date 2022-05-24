@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class selectLevel : MonoBehaviour
+public class SelectLevel : MonoBehaviour
 {
     public GameObject MainMenu, LevelMenu;
     public Button SelectedButtonMain, SelectedButtonLevel;
