@@ -46,6 +46,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ab9bc0711c2eaf428e59e925204968d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damageOnCollision: 10
+  throwingDamage: 10
+  throwingSpeed: 5
+  bullet: {fileID: 7686480543203161914, guid: 6a5c28dd9c4940d4c88ab9e9cb29c443, type: 3}
 --- !u!65 &5768700187728288728
 BoxCollider:
   m_ObjectHideFlags: 0
