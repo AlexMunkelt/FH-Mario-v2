@@ -61,9 +61,9 @@ MonoBehaviour:
   idleAnimations:
   - {fileID: 6152999803633860051}
   playertype: 0
-  speed: 5
+  speed: 250
   acceleration: 10
-  jumpStrength: 3
+  jumpStrength: 200
   layerMask:
     serializedVersion: 2
     m_Bits: 64
