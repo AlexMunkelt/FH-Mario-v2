@@ -13,6 +13,7 @@ public class Player : MonoBehaviour
     public float speed = 1f;
     public float acceleration = 1f;
     public float jumpStrength = 1f;
+    public float jumpOnEnemyMult = 2f;
     public LayerMask layerMask;
 
     public bool canMove = true;
@@ -34,12 +35,8 @@ public class Player : MonoBehaviour
     private Vector3 startPos;
     private GameController controller;
 
-    private float maxDelay = 1f;
-    private float delay;
-
     void Start()
     {
-        delay = maxDelay;
         rb = this.GetComponent<Rigidbody>();
         startPos = this.transform.position;
         controller = GameController.instance;
@@ -51,13 +48,11 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        delay -= Time.deltaTime;
 
-        if (delay <= 0)
-        {
-            canJump = true;
-        }
+    }
 
+    private void FixedUpdate()
+    {
         Movement();
     }
 
@@ -199,9 +194,6 @@ public class Player : MonoBehaviour
     public void Jump(float mult = 1f)
     {
         rb.AddForce(new Vector2(0, 1 * jumpStrength * mult * Time.deltaTime), ForceMode.Impulse);
-
-        canJump = false;
-        delay = maxDelay;
 
         isJumping = true;
 

@@ -37,7 +37,7 @@ public class BlackPencilBullet : MonoBehaviour
         {
             if (go.transform.position.y > this.transform.position.y)
             {
-                go.GetComponent<Player>().Jump(4f);
+                go.GetComponent<Player>().Jump(go.GetComponent<Player>().jumpOnEnemyMult);
                 Death();
             }
             else

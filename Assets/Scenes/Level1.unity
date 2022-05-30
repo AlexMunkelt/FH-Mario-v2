@@ -208,6 +208,10 @@ PrefabInstance:
       value: 200
       objectReference: {fileID: 0}
     - target: {fileID: 2336284592980264789, guid: d2114ef1c309b104fad87d89be131262, type: 3}
+      propertyPath: jumpOnEnemyMult
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2336284592980264789, guid: d2114ef1c309b104fad87d89be131262, type: 3}
       propertyPath: layerMask.m_Bits
       value: 64
       objectReference: {fileID: 0}
@@ -6821,6 +6825,10 @@ PrefabInstance:
     - target: {fileID: 2336284592980264789, guid: d2114ef1c309b104fad87d89be131262, type: 3}
       propertyPath: jumpStrength
       value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 2336284592980264789, guid: d2114ef1c309b104fad87d89be131262, type: 3}
+      propertyPath: jumpOnEnemyMult
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3770426837765192940, guid: d2114ef1c309b104fad87d89be131262, type: 3}
       propertyPath: m_Name
