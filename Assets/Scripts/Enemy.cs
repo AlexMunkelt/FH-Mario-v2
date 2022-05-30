@@ -6,6 +6,8 @@ public class Enemy : MonoBehaviour
 {
     private Rigidbody rb;
 
+    public int damageOnCollision = 10;
+
     // Start is called before the first frame update
     public virtual void Start()
     {
@@ -27,6 +29,10 @@ public class Enemy : MonoBehaviour
             if (go.transform.position.y > this.transform.position.y + 1)
             {
                 go.GetComponent<Player>().Jump(4f);
+                Death();
+            } else
+            {
+                go.GetComponent<Player>().GetHit(damageOnCollision);
                 Death();
             }
         }

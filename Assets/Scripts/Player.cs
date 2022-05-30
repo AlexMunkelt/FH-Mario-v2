@@ -31,10 +31,14 @@ public class Player : MonoBehaviour
     private int runIndex = 0;
 
     private Vector3 move = Vector3.zero;
+    private Vector3 startPos;
+    private GameController controller;
 
     void Start()
     {
         rb = this.GetComponent<Rigidbody>();
+        startPos = this.transform.position;
+        controller = GameController.instance;
 
         StartCoroutine(Animation());
 
@@ -243,6 +247,11 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(timeUntilMoveAgain);
 
         canMove = true;
+    }
+
+    public void GetHit(int damage)
+    {
+        controller.health -= damage;
     }
 
     #region UnitTests
