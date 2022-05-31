@@ -21,10 +21,17 @@ public class CameraMovement : MonoBehaviour
     {
         AddCollider();
         Player1 = GameObject.Find("Player");
-        Player2 = GameObject.Find("Player2");
-        Middle_Vec = (Player1.transform.position + Player2.transform.position) / 2;
-        Camera.main.transform.position = Middle_Vec;
-        MinFOV = Camera.main.fieldOfView;
+        if (true)//Hier prüfen ob coop ist oder nicht.
+        {
+            Player2 = GameObject.Find("Player2");
+            Middle_Vec = (Player1.transform.position + Player2.transform.position) / 2;
+            Camera.main.transform.position = Middle_Vec;
+            MinFOV = Camera.main.fieldOfView;
+        }
+        else
+        {
+            Camera.main.transform.position = Player1.transform.position;
+        }
     }
 
     // add collider to the camera
