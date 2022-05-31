@@ -7,6 +7,8 @@ public class PauseGame : MonoBehaviour
 {
     public GameObject PauseMenu;
     public Player player1, player2;
+    public GameObject levelMusic;
+    public GameObject pauseMusic;
     private bool GameIsPaused = false;
     // Start is called before the first frame update
     void Start()
@@ -37,6 +39,8 @@ public class PauseGame : MonoBehaviour
         PauseMenu.SetActive(true);
         player1.canJump = false;
         player1.canMove = false;
+        levelMusic.SetActive(false);
+        pauseMusic.SetActive(true);
     }
     public void doResumeGame()
     {
@@ -45,6 +49,8 @@ public class PauseGame : MonoBehaviour
         PauseMenu.SetActive(false);
         player1.canJump = true;
         player1.canMove = true;
+        levelMusic.SetActive(true);
+        pauseMusic.SetActive(false);
     }
 
     public void Menu()
