@@ -8,7 +8,7 @@ public class BlackPencilBullet : MonoBehaviour
     public int speed = 10;
     [HideInInspector]
     public int damage = 10;
-    [HideInInspector]
+
     public bool shootRight = false;
 
     // Start is called before the first frame update
