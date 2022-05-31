@@ -16,12 +16,19 @@ public class CameraMovement : MonoBehaviour
     private Vector3 Camera_Pos;
 
     private float MinFOV;
+
+    bool checkCoop()
+    {
+        //Not implemented yet
+        return true;
+    }
+    
     // Start is called before the first frame update
     void Start()
     {
         AddCollider();
         Player1 = GameObject.Find("Player");
-        if (true)//Hier prüfen ob coop ist oder nicht.
+        if (checkCoop())
         {
             Player2 = GameObject.Find("Player2");
             Middle_Vec = (Player1.transform.position + Player2.transform.position) / 2;
@@ -119,7 +126,7 @@ public class CameraMovement : MonoBehaviour
     void Update()
     {
         Player1 = GameObject.Find("Player");
-        if (true)//Hier prüfen, ob coop ist oder nicht.
+        if (checkCoop())
         {
             Player2 = GameObject.Find("Player2");
             //create list of players
