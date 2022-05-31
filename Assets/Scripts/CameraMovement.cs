@@ -127,13 +127,13 @@ public class CameraMovement : MonoBehaviour
             var cam = Camera.main;
             if (fov > cam.fieldOfView)
             {
-                for(var i = cam.fieldOfView; i <= fov; i+=fps/10000)
+                for(var i = 0f; i <= 1f; i+=0.01f)
                 {
                     cam.fieldOfView = easeInSine(cam.fieldOfView, fov, i);
                 }
             }else if (fov < cam.fieldOfView)
             {
-                for(var i = cam.fieldOfView; i >= fov; i-=fps/10000)
+                for(var i = 1f; i >= 0f; i-=0.01f)
                 {
                     cam.fieldOfView = easeOutSine(cam.fieldOfView, fov, i);
                 }
