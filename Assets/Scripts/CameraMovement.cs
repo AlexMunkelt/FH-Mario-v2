@@ -40,10 +40,6 @@ public class CameraMovement : MonoBehaviour
             Camera.main.transform.position = Middle_Vec;
             MinFOV = Camera.main.fieldOfView;
         }
-        else
-        {
-            Camera.main.transform.position = Player1.transform.position;
-        }
     }
 
     // add collider to the camera
@@ -169,10 +165,6 @@ public class CameraMovement : MonoBehaviour
             {
                 StopPlayer(Player);
             }
-        }
-        else
-        {
-            Camera.main.transform.position = Player1.transform.position;
         }
     }
 }

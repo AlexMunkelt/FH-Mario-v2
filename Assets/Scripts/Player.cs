@@ -49,7 +49,10 @@ public class Player : MonoBehaviour
         startPos = this.transform.position;
         controller = GameController.instance;
 
-        StartCoroutine(Animation());
+        if (this.gameObject.activeSelf)
+        {
+            StartCoroutine(Animation());
+        }
 
         HorizontalMovementTest();
     }
