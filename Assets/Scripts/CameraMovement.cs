@@ -20,7 +20,7 @@ public class CameraMovement : MonoBehaviour
 
     bool checkCoop()
     {
-        return  GameObject.Find("CoopButton").GetComponent<Button>().IsActive();
+        return ToggleCoop.instance.coop;
     }
     
     // Start is called before the first frame update

@@ -8,6 +8,8 @@ public class BlackPencil : Enemy
     public int throwingSpeed;
     public GameObject bullet;
 
+    public AudioSource throwingSound;
+
     // Start is called before the first frame update
     public override void Start()
     {
@@ -45,6 +47,7 @@ public class BlackPencil : Enemy
 
     private void Shoot(bool shootRight)
     {
+        throwingSound.Play();
         BlackPencilBullet pencil = Instantiate(bullet, this.transform.position + new Vector3(0,0.5f,0), Quaternion.Euler(0,this.transform.eulerAngles.y,0)).GetComponent<BlackPencilBullet>();
         pencil.damage = this.throwingDamage;
         pencil.speed = this.throwingSpeed;
