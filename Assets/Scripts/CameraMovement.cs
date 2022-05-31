@@ -5,7 +5,7 @@ using UnityEngine;
 public class CameraMovement : MonoBehaviour
 {
     [SerializeField] private int MaxFOV = 40;
-    [SerializeField] private float expandColliderBox = 2f;
+    [SerializeField] private float expandColliderBox = 3.75f;
     
     private GameObject Player1;
 
@@ -14,7 +14,6 @@ public class CameraMovement : MonoBehaviour
     private Vector3 Middle_Vec;
     
     private Vector3 Camera_Pos;
-
 
     private float MinFOV;
     // Start is called before the first frame update
@@ -72,11 +71,13 @@ public class CameraMovement : MonoBehaviour
     private float calcFOV(GameObject P1, GameObject P2)
     {
         float fov = 0f;
-        if (Max(P1.transform.position.y, P2.transform.position.y) > Camera.main.rect.yMax)
+        var p1Pos = P1.transform.position;
+        var p2Pos = P2.transform.position;
+        if (Max(p1Pos.y, p2Pos.y) > Camera.main.rect.yMax)
         {
-            float GK = Abs(Abs(P1.transform.position.y) - Abs(P2.transform.position.y));
-            float aspectRatio = GK / Max(P1.transform.position.x, P2.transform.position.x);
-            float AK = Abs(Camera.main.transform.position.z - Max(P1.transform.position.z, P1.transform.position.z));
+            float GK = Abs(Abs(p1Pos.y) - Abs(p2Pos.y));
+            float aspectRatio = GK / Max(p1Pos.x, p2Pos.x);
+            float AK = Abs(Camera.main.transform.position.z - Max(p1Pos.z, p2Pos.z));
             double HY = Sqrt(Pow(GK, 2) + Pow(AK, 2));
             double alpha = Asin(GK / HY);
             fov = Mathf.Rad2Deg * (float) alpha * 2;
@@ -84,15 +85,27 @@ public class CameraMovement : MonoBehaviour
         }
         else
         {
-            float GK = Abs(Abs(P1.transform.position.x) - Abs(P2.transform.position.x));
-            float AK = Abs(Camera.main.transform.position.z - Max(P1.transform.position.z, P1.transform.position.z));
+            float GK = Abs(Abs(p1Pos.x) - Abs(p2Pos.x));
+            float AK = Abs(Camera.main.transform.position.z - Max(p1Pos.z, p2Pos.z));
             double HY = Sqrt(Pow(GK, 2) + Pow(AK, 2));
             double alpha = Asin(GK / HY);
             fov = Mathf.Rad2Deg * (float) alpha * 2;
         }
         print("FOV: " + fov);
+        print("Camera FOV: " + Camera.main.fieldOfView);
         return fov;
     }
+
+    private float easeInSine(float start, float end, float value)
+    {
+        return (end - start) * 0.5f * (1f + Mathf.Sin(value * Mathf.PI * 0.5f)) + start;
+    }
+    
+    private float easeOutSine(float start, float end, float value)
+    {
+        return (end - start) * 0.5f * (1f - Mathf.Sin(value * Mathf.PI * 0.5f)) + start;
+    }
+    
     // Update is called once per frame
     void Update()
     {
@@ -110,7 +123,21 @@ public class CameraMovement : MonoBehaviour
         float fov = calcFOV(Player1, Player2);
         if (fov >= MinFOV && fov <= MaxFOV)
         {
-            Camera.main.fieldOfView = fov;
+            var fps = 1f / Time.deltaTime;
+            var cam = Camera.main;
+            if (fov > cam.fieldOfView)
+            {
+                for(var i = 0f; i <= 1f; i+=0.01f)
+                {
+                    cam.fieldOfView = easeInSine(cam.fieldOfView, fov, i);
+                }
+            }else if (fov < cam.fieldOfView)
+            {
+                for(var i = 1f; i >= 0f; i-=0.01f)
+                {
+                    cam.fieldOfView = easeOutSine(cam.fieldOfView, fov, i);
+                }
+            }
         }
         //iterate through players
         foreach (var Player in Players)
