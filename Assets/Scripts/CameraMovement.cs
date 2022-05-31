@@ -80,7 +80,9 @@ public class CameraMovement : MonoBehaviour
         }
         else
         {
-            Camera_Pos = Camera.main.transform.position;
+            var pos = Player1.transform.position;
+            pos.z = Camera.main.transform.position.z;
+            Camera.main.transform.position = pos;
         }
     }
 
@@ -165,6 +167,12 @@ public class CameraMovement : MonoBehaviour
             {
                 StopPlayer(Player);
             }
+        }
+        else
+        {
+            var pos = Player1.transform.position;
+            pos.z = Camera.main.transform.position.z;
+            Camera.main.transform.position = pos;
         }
     }
 }
