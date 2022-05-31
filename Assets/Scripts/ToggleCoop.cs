@@ -4,17 +4,8 @@ using UnityEngine;
 
 public class ToggleCoop : MonoBehaviour
 {
-
-    public static ToggleCoop instance;
-
-    private void Awake()
-    {
-        instance = this;
-    }
-
     public GameObject textSolo, textCoop, StoreCoop;
-    [HideInInspector]
-    public bool coop = false;
+    bool coop = false;
     bool destroy = false;
 
     // Start is called before the first frame update

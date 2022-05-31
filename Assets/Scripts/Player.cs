@@ -37,11 +37,6 @@ public class Player : MonoBehaviour
 
     void Start()
     {
-        if (!ToggleCoop.instance.coop && playertype == Playertype.Player2)
-        {
-            this.gameObject.SetActive(false);
-        }
-
         rb = this.GetComponent<Rigidbody>();
         startPos = this.transform.position;
         controller = GameController.instance;
