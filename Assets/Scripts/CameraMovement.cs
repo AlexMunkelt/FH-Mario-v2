@@ -1,6 +1,7 @@
 using static System.Math;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CameraMovement : MonoBehaviour
 {
@@ -19,8 +20,7 @@ public class CameraMovement : MonoBehaviour
 
     bool checkCoop()
     {
-        //Not implemented yet
-        return true;
+        return  GameObject.Find("CoopButton").GetComponent<Button>().IsActive();
     }
     
     // Start is called before the first frame update
