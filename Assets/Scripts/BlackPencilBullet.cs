@@ -14,7 +14,7 @@ public class BlackPencilBullet : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        StartCoroutine(DeathTimer());
     }
 
     // Update is called once per frame
@@ -38,18 +38,25 @@ public class BlackPencilBullet : MonoBehaviour
             if (go.transform.position.y > this.transform.position.y)
             {
                 go.GetComponent<Player>().Jump(go.GetComponent<Player>().jumpOnEnemyMult);
-                Death();
             }
             else
             {
                 go.GetComponent<Player>().GetHit(damage);
-                Death();
             }
         }
+
+        Death();
     }
 
     private void Death()
     {
         Destroy(this.gameObject);
+    }
+
+    IEnumerator DeathTimer()
+    {
+        yield return new WaitForSeconds(10f);
+
+        Death();
     }
 }
