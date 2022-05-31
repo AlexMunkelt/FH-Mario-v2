@@ -21,10 +21,17 @@ public class CameraMovement : MonoBehaviour
     {
         AddCollider();
         Player1 = GameObject.Find("Player");
-        Player2 = GameObject.Find("Player2");
-        Middle_Vec = (Player1.transform.position + Player2.transform.position) / 2;
-        Camera.main.transform.position = Middle_Vec;
-        MinFOV = Camera.main.fieldOfView;
+        if (true)//Hier prüfen ob coop ist oder nicht.
+        {
+            Player2 = GameObject.Find("Player2");
+            Middle_Vec = (Player1.transform.position + Player2.transform.position) / 2;
+            Camera.main.transform.position = Middle_Vec;
+            MinFOV = Camera.main.fieldOfView;
+        }
+        else
+        {
+            Camera.main.transform.position = Player1.transform.position;
+        }
     }
 
     // add collider to the camera
@@ -40,7 +47,8 @@ public class CameraMovement : MonoBehaviour
     private void StopPlayer(GameObject Player)
     {
         //when player is at the right edge of the screen
-        if (Player.transform.position.x > Camera.main.transform.position.x + Camera.main.orthographicSize + expandColliderBox)
+        if (Player.transform.position.x > Camera.main.transform.position.x + 
+            Camera.main.orthographicSize + expandColliderBox)
         {
             //lock position of camera
             Camera.main.transform.position = Camera_Pos;
@@ -52,7 +60,8 @@ public class CameraMovement : MonoBehaviour
             
         }
         //when player is at the left edge of the screen
-        else if (Player.transform.position.x < Camera.main.transform.position.x - Camera.main.orthographicSize - expandColliderBox)
+        else if (Player.transform.position.x < Camera.main.transform.position.x -
+                 Camera.main.orthographicSize - expandColliderBox)
         {
             //lock position of camera
             Camera.main.transform.position = Camera_Pos;
@@ -110,39 +119,48 @@ public class CameraMovement : MonoBehaviour
     void Update()
     {
         Player1 = GameObject.Find("Player");
-        Player2 = GameObject.Find("Player2");
-        //create list of players
-        List<GameObject> Players = new List<GameObject>();
-        Players.Add(Player1);
-        Players.Add(Player2);
-        
-        Middle_Vec = (Player1.transform.position + Player2.transform.position) / 2;
-        Middle_Vec.y += 1.5f;
-        Middle_Vec.z = -68;
-        Camera.main.transform.position = Middle_Vec;
-        float fov = calcFOV(Player1, Player2);
-        if (fov >= MinFOV && fov <= MaxFOV)
+        if (true)//Hier prüfen, ob coop ist oder nicht.
         {
-            var fps = 1f / Time.deltaTime;
-            var cam = Camera.main;
-            if (fov > cam.fieldOfView)
+            Player2 = GameObject.Find("Player2");
+            //create list of players
+            List<GameObject> Players = new List<GameObject>();
+            Players.Add(Player1);
+            Players.Add(Player2);
+
+            Middle_Vec = (Player1.transform.position + Player2.transform.position) / 2;
+            Middle_Vec.y += 1.5f;
+            Middle_Vec.z = -68;
+            Camera.main.transform.position = Middle_Vec;
+            float fov = calcFOV(Player1, Player2);
+            if (fov >= MinFOV && fov <= MaxFOV)
             {
-                for(var i = 0f; i <= 1f; i+=0.01f)
+                var fps = 1f / Time.deltaTime;
+                var cam = Camera.main;
+                if (fov > cam.fieldOfView)
                 {
-                    cam.fieldOfView = easeInSine(cam.fieldOfView, fov, i);
+                    for (var i = 0f; i <= 1f; i += 0.01f)
+                    {
+                        cam.fieldOfView = easeInSine(cam.fieldOfView, fov, i);
+                    }
                 }
-            }else if (fov < cam.fieldOfView)
-            {
-                for(var i = 1f; i >= 0f; i-=0.01f)
+                else if (fov < cam.fieldOfView)
                 {
-                    cam.fieldOfView = easeOutSine(cam.fieldOfView, fov, i);
+                    for (var i = 1f; i >= 0f; i -= 0.01f)
+                    {
+                        cam.fieldOfView = easeOutSine(cam.fieldOfView, fov, i);
+                    }
                 }
             }
+
+            //iterate through players
+            foreach (var Player in Players)
+            {
+                StopPlayer(Player);
+            }
         }
-        //iterate through players
-        foreach (var Player in Players)
+        else
         {
-            StopPlayer(Player);
+            Camera.main.transform.position = Player1.transform.position;
         }
     }
 }
