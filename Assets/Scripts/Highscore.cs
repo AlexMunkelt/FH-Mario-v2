@@ -31,11 +31,11 @@ public class Highscore : MonoBehaviour
 
     private void WriteScore()
     {
-        newScore.text = gameController.maxHealth.ToString();
+        newScore.text = gameController.note.ToString();
         highscore.text = PlayerPrefs.GetFloat("highscore").ToString();
-        if(PlayerPrefs.GetFloat("highscore") < gameController.maxHealth)
+        if(gameController.note > 0 && PlayerPrefs.GetFloat("highscore") > gameController.note)
         {
-            PlayerPrefs.SetFloat("highscore", gameController.maxHealth);
+            PlayerPrefs.SetFloat("highscore", gameController.note);
         }
     }
 }
