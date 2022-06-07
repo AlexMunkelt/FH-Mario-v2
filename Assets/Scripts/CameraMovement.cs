@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class CameraMovement : MonoBehaviour
 {
-    [SerializeField] private int MaxFOV = 40;
+    [SerializeField] private int MaxFOV = 20;
     [SerializeField] private float expandColliderBox = 3.75f;
     
     private GameObject player1;
@@ -121,8 +121,8 @@ public class CameraMovement : MonoBehaviour
             double alpha = Asin(GK / HY);
             fov = Mathf.Rad2Deg * (float) alpha * 2;
         }
-        //print("FOV: " + fov);
-        //print("Camera FOV: " + Camera.main.fieldOfView);
+        print("FOV: " + fov);
+        print("Camera FOV: " + Camera.main.fieldOfView);
         return fov;
     }
 
