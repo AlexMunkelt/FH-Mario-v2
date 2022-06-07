@@ -5174,6 +5174,7 @@ MonoBehaviour:
   player2: {fileID: 444018697}
   levelMusic: {fileID: 1045515006}
   pauseMusic: {fileID: 75774292}
+  selectedButton: {fileID: 371646546}
 --- !u!1001 &1209679992
 PrefabInstance:
   m_ObjectHideFlags: 0
