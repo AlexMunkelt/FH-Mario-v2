@@ -18,7 +18,7 @@ public class CameraMovement : MonoBehaviour
 
     private float minFOV;
     
-    private float cameraFix = 1.75f;
+    private float cameraFix = 2.75f;
 
     bool checkCoop()
     {
