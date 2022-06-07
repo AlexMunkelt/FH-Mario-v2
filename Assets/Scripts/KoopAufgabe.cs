@@ -28,6 +28,15 @@ public class KoopAufgabe : MonoBehaviour
             }
         }
         
+        //freeze btn position and rotation
+        foreach (GameObject[] a in new []{btns, doors})
+        {
+            foreach (GameObject o in a)
+            {
+                o.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
+            }
+        }
+        
     }
     
     bool PlayerOnBtn(GameObject btn, GameObject player)
