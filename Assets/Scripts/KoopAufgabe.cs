@@ -36,12 +36,13 @@ public class KoopAufgabe : MonoBehaviour
                 o.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezeAll;
             }
         }
-        
+
     }
     
     bool PlayerOnBtn(GameObject btn, GameObject player)
     {
-        if (player.transform.position.y.Equals(btn.transform.position.y))
+        //Push down btn if player is on it
+        if(player.transform.position == btn.transform.position)
         {
             PushDown(btn);
             return true;
@@ -52,6 +53,12 @@ public class KoopAufgabe : MonoBehaviour
     //Push down button
     void PushDown(GameObject btn)
     {
+        
+        //Get Color of btn
+        Color c = btn.GetComponent<Renderer>().material.color;
+        //Add Glow Effect to btn
+        btn.GetComponent<Renderer>().material.SetColor("_EmissionColor", c);
+        
         var btnY = btn.transform.position.y;
         while (btnY >= -0.05f)
         {
@@ -59,7 +66,7 @@ public class KoopAufgabe : MonoBehaviour
             btnY -= 0.01f;
         }
     }
-    
+
     void OpenDoor(GameObject door)
     {
         //Rotate door to open
