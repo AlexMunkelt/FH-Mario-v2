@@ -81,7 +81,6 @@ public class CameraMovement : MonoBehaviour
         else
         {
             Camera_Pos = Camera.main.transform.position;
-=======
             var pos = Player1.transform.position;
             pos.z = Camera.main.transform.position.z;
             pos.y += 2f;
@@ -174,7 +173,6 @@ public class CameraMovement : MonoBehaviour
         else
         {
             Camera.main.transform.position = Player1.transform.position;
-=======
             var pos = Player1.transform.position;
             pos.z = Camera.main.transform.position.z;
             pos.y += 2f;
