@@ -9,6 +9,10 @@ public class KoopAufgabe : MonoBehaviour
     private GameObject[] doors;
 
     private GameObject[] players;
+
+    private float btn1Y;
+    
+    private float btn2Y;
     
     private bool btnsPushed = false;
     
@@ -18,15 +22,15 @@ public class KoopAufgabe : MonoBehaviour
         btns = new[] {GameObject.Find("Btn1"), GameObject.Find("Btn2")};
         doors = new[] {GameObject.Find("Door"), GameObject.Find("Door2")};
         players = new[] {GameObject.Find("Player"), GameObject.Find("Player2")};
+        btn1Y = btns[0].transform.position.y;
+        btn2Y = btns[1].transform.position.y;
         
-        //Add Rigidbody
-        foreach (GameObject[] a in new []{btns, doors})
+        //Add Colliders
+        foreach (GameObject door in doors)
         {
-            foreach (GameObject o in a)
-            {
-                o.AddComponent<Rigidbody>();
-            }
+            door.AddComponent<BoxCollider>();
         }
+        
         
         //freeze btn position and rotation
         foreach (GameObject[] a in new []{btns, doors})
@@ -41,24 +45,16 @@ public class KoopAufgabe : MonoBehaviour
     
     bool PlayerOnBtn(GameObject btn, GameObject player)
     {
-        //Push down btn if player is on it
-        if(player.transform.position == btn.transform.position)
-        {
-            return true;
-        }
-        return false;
+        var playerPos = player.transform.position;
+        var btnPos = btn.transform.position;
+        return playerPos.y.Equals(btnPos.y) && playerPos.x.Equals(btnPos.x);
     }
     
     //Push down button
     void PushDown(GameObject btn)
     {
-        
-        //Get Color of btn
-        Color c = btn.GetComponent<Renderer>().material.color;
-        //Add Glow Effect to btn
-        btn.GetComponent<Renderer>().material.SetColor("_EmissionColor", c);
-        
         var btnY = btn.transform.position.y;
+        print("BtnY: " + btnY);
         while (btnY >= -0.05f)
         {
             btn.transform.position = new Vector3(btn.transform.position.x, btnY, btn.transform.position.z);
@@ -69,11 +65,6 @@ public class KoopAufgabe : MonoBehaviour
     //Push up button
     void PushUp(GameObject btn)
     {
-        //Get Color of btn
-        Color c = btn.GetComponent<Renderer>().material.color;
-        //Remove Glow Effect from btn
-        btn.GetComponent<Renderer>().material.SetColor("_EmissionColor", new Color(0, 0, 0, 0));
-        
         var btnY = btn.transform.position.y;
         while (btnY <= 0.05f)
         {

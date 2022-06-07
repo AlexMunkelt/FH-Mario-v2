@@ -121,8 +121,8 @@ public class CameraMovement : MonoBehaviour
             double alpha = Asin(GK / HY);
             fov = Mathf.Rad2Deg * (float) alpha * 2;
         }
-        print("FOV: " + fov);
-        print("Camera FOV: " + Camera.main.fieldOfView);
+        //print("FOV: " + fov);
+        //print("Camera FOV: " + Camera.main.fieldOfView);
         return fov;
     }
 
