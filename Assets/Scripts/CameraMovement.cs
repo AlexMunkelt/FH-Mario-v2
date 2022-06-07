@@ -22,12 +22,7 @@ public class CameraMovement : MonoBehaviour
 
     bool checkCoop()
     {
-        if (ToggleCoop.instance == null)
-        {
-            return true;
-        }
-
-        return ToggleCoop.instance.coop;
+        return ToggleCoop.instance.Equals(null);
     }
     
     // Start is called before the first frame update
