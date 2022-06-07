@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1131761090691201300}
   - component: {fileID: 360008813152150445}
+  - component: {fileID: 9218314778227041091}
   - component: {fileID: 360008813152150444}
   m_Layer: 0
   m_Name: CoffeeCup
@@ -48,6 +49,21 @@ MonoBehaviour:
   healthGain: 10
   speedMult: 5
   timeUntilOldSpeed: 5
+--- !u!114 &9218314778227041091
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 360008813152150446}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7e74ed83129479448e79c477f51f3b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rotationSpeed: 100
+  speed: 1
+  moveLength: 5
 --- !u!65 &360008813152150444
 BoxCollider:
   m_ObjectHideFlags: 0
