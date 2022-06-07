@@ -32,6 +32,7 @@ public class CameraMovement : MonoBehaviour
         {
             Player2 = GameObject.Find("Player2");
             Middle_Vec = (Player1.transform.position + Player2.transform.position) / 2;
+            Middle_Vec.y += 2.75f;
             Camera.main.transform.position = Middle_Vec;
             MinFOV = Camera.main.fieldOfView;
         }
@@ -79,7 +80,14 @@ public class CameraMovement : MonoBehaviour
         }
         else
         {
+<<<<<<< Updated upstream
             Camera_Pos = Camera.main.transform.position;
+=======
+            var pos = Player1.transform.position;
+            pos.z = Camera.main.transform.position.z;
+            pos.y += 2f;
+            Camera.main.transform.position = pos;
+>>>>>>> Stashed changes
         }
     }
 
@@ -135,7 +143,7 @@ public class CameraMovement : MonoBehaviour
             Players.Add(Player2);
 
             Middle_Vec = (Player1.transform.position + Player2.transform.position) / 2;
-            Middle_Vec.y += 1.5f;
+            Middle_Vec.y += 2.75f;
             Middle_Vec.z = -68;
             Camera.main.transform.position = Middle_Vec;
             float fov = calcFOV(Player1, Player2);
@@ -167,7 +175,14 @@ public class CameraMovement : MonoBehaviour
         }
         else
         {
+<<<<<<< Updated upstream
             Camera.main.transform.position = Player1.transform.position;
+=======
+            var pos = Player1.transform.position;
+            pos.z = Camera.main.transform.position.z;
+            pos.y += 2f;
+            Camera.main.transform.position = pos;
+>>>>>>> Stashed changes
         }
     }
 }
