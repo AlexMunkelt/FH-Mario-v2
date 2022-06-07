@@ -21,6 +21,8 @@ public class Player : MonoBehaviour
     public bool canJump = true;
     public bool canDoubleJump = true;
 
+    private float stockSpeed = 1f;
+
     public enum Playertype { Player1, Player2 };
     private enum State { Idle, Running, Jumping};
 
@@ -51,6 +53,7 @@ public class Player : MonoBehaviour
         rb = this.GetComponent<Rigidbody>();
         startPos = this.transform.position;
         controller = GameController.instance;
+        stockSpeed = speed;
 
         if (this.gameObject.activeSelf)
         {
@@ -68,6 +71,20 @@ public class Player : MonoBehaviour
     private void FixedUpdate()
     {
         Movement();
+    }
+
+    public void SpeedPowerup(float mult, float timeUntilOldSpeed)
+    {
+        speed *= mult;
+
+        StartCoroutine(ResetSpeed(timeUntilOldSpeed));
+    }
+
+    private IEnumerator ResetSpeed(float timeUntilOldSpeed)
+    {
+        yield return new WaitForSeconds(timeUntilOldSpeed);
+
+        speed = stockSpeed;
     }
 
     private void Movement()

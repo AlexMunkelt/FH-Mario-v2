@@ -31,6 +31,11 @@ public class GameController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (health > maxHealth)
+        {
+            health = maxHealth;
+        }
+
         healthbarFront.fillAmount = (float) health / (float) maxHealth;
 
         if (health <= 0)
