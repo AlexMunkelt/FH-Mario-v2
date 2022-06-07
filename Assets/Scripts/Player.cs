@@ -13,11 +13,13 @@ public class Player : MonoBehaviour
     public float speed = 1f;
     public float acceleration = 1f;
     public float jumpStrength = 1f;
+    public float doubleJumpMult = 2.5f;
     public float jumpOnEnemyMult = 2f;
     public LayerMask layerMask;
 
     public bool canMove = true;
     public bool canJump = true;
+    public bool canDoubleJump = true;
 
     public enum Playertype { Player1, Player2 };
     private enum State { Idle, Running, Jumping};
@@ -26,6 +28,7 @@ public class Player : MonoBehaviour
     private Rigidbody rb;
     private bool isGrounded = false;
     private bool isJumping = false;
+    private bool isDoubleJumping = false;
     private bool touchedLeftWall = false;
     private bool touchedRightWall = false;
 
@@ -127,7 +130,9 @@ public class Player : MonoBehaviour
         {
             Debug.DrawRay(transform.position + new Vector3(0, 1, 0), transform.TransformDirection(-transform.up) * hit.distance, Color.red);
             isGrounded = true;
+            canJump = true;
             isJumping = false;
+            isDoubleJumping = false;
         }
         else
         {
@@ -165,40 +170,47 @@ public class Player : MonoBehaviour
     {
         if (canJump)
         {
-            if (Input.GetKey(KeyCode.W) && isGrounded && playertype == Playertype.Player1)
+            if (Input.GetKey(KeyCode.W) && playertype == Playertype.Player1)
             {
-                if (!isJumping)
+                if (!isJumping && isGrounded)
                 {
+                    canJump = false;
                     Jump();
                 }
-                //move.y = jumpStrength;
+                else if (canDoubleJump && !isDoubleJumping)
+                {
+                    canJump = false;
+                    isDoubleJumping = true;
+
+                    Jump(doubleJumpMult);
+                }
             }
 
-            if (Input.GetKey(KeyCode.UpArrow) && isGrounded && playertype == Playertype.Player2)
+            if (Input.GetKey(KeyCode.UpArrow) && playertype == Playertype.Player2)
             {
-                if (!isJumping)
+                if (!isJumping && isGrounded)
                 {
+                    canJump = false;
                     Jump();
                 }
-                //move.y = jumpStrength;
+                else if (canDoubleJump && !isDoubleJumping)
+                {
+                    canJump = false;
+                    isDoubleJumping = true;
+
+                    Jump(doubleJumpMult);
+                }
             }
+        }
 
-            // Walljumping
-            //if (Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.A) && touchedLeftWall)
-            //{
-            //    move.y = jumpStrength;
-            //    move.x = speed;
+        if (Input.GetKeyUp(KeyCode.W) && playertype == Playertype.Player1)
+        {
+            canJump = true;
+        }
 
-            //    StartCoroutine(CanMoveAgain(0.5f));
-            //}
-
-            //if (Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.D) && touchedRightWall)
-            //{
-            //    move.y = jumpStrength;
-            //    move.x = -speed;
-
-            //    StartCoroutine(CanMoveAgain(0.5f));
-            //}
+        if (Input.GetKey(KeyCode.UpArrow) && playertype == Playertype.Player2)
+        {
+            canJump = true;
         }
     }
 
