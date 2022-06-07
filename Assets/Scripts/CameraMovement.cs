@@ -17,8 +17,8 @@ public class CameraMovement : MonoBehaviour
     private Vector3 cameraPos;
 
     private float minFOV;
-    
-    private float cameraFix = 2.75f;
+
+    private float cameraFix;
 
     bool checkCoop()
     {
@@ -37,6 +37,7 @@ public class CameraMovement : MonoBehaviour
         player1 = GameObject.Find("Player");
         if (checkCoop())
         {
+            cameraFix = 2.75f;
             player2 = GameObject.Find("Player2");
             middleVec = (player1.transform.position + player2.transform.position) / 2;
             middleVec.z = Camera.main.transform.position.z;
@@ -46,6 +47,7 @@ public class CameraMovement : MonoBehaviour
         }
         else
         {
+            cameraFix = 1.75f;
             var tmp = player1.transform.position;
             tmp.y += cameraFix;
             tmp.z = Camera.main.transform.position.z;
@@ -119,8 +121,8 @@ public class CameraMovement : MonoBehaviour
             double alpha = Asin(GK / HY);
             fov = Mathf.Rad2Deg * (float) alpha * 2;
         }
-        print("FOV: " + fov);
-        print("Camera FOV: " + Camera.main.fieldOfView);
+        //print("FOV: " + fov);
+        //print("Camera FOV: " + Camera.main.fieldOfView);
         return fov;
     }
 
