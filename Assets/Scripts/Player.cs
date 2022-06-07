@@ -208,14 +208,21 @@ public class Player : MonoBehaviour
             canJump = true;
         }
 
-        if (Input.GetKey(KeyCode.UpArrow) && playertype == Playertype.Player2)
+        if (Input.GetKeyUp(KeyCode.UpArrow) && playertype == Playertype.Player2)
         {
             canJump = true;
         }
     }
 
+    void ResetYVelocity()
+    {
+        rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+        rb.angularVelocity = new Vector3(rb.angularVelocity.x, 0f, rb.angularVelocity.z);
+    }
+
     public void Jump(float mult = 1f)
     {
+        ResetYVelocity();
         rb.AddForce(new Vector2(0, 1 * jumpStrength * mult * Time.deltaTime), ForceMode.Impulse);
 
         isJumping = true;

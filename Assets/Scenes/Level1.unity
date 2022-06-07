@@ -278,7 +278,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2336284592980264789, guid: d2114ef1c309b104fad87d89be131262, type: 3}
       propertyPath: jumpStrength
-      value: 200
+      value: 400
+      objectReference: {fileID: 0}
+    - target: {fileID: 2336284592980264789, guid: d2114ef1c309b104fad87d89be131262, type: 3}
+      propertyPath: doubleJumpMult
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2336284592980264789, guid: d2114ef1c309b104fad87d89be131262, type: 3}
       propertyPath: jumpOnEnemyMult
@@ -8795,12 +8799,20 @@ PrefabInstance:
       value: 250
       objectReference: {fileID: 0}
     - target: {fileID: 2336284592980264789, guid: d2114ef1c309b104fad87d89be131262, type: 3}
+      propertyPath: playertype
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2336284592980264789, guid: d2114ef1c309b104fad87d89be131262, type: 3}
       propertyPath: acceleration
       value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2336284592980264789, guid: d2114ef1c309b104fad87d89be131262, type: 3}
       propertyPath: jumpStrength
-      value: 200
+      value: 400
+      objectReference: {fileID: 0}
+    - target: {fileID: 2336284592980264789, guid: d2114ef1c309b104fad87d89be131262, type: 3}
+      propertyPath: doubleJumpMult
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2336284592980264789, guid: d2114ef1c309b104fad87d89be131262, type: 3}
       propertyPath: jumpOnEnemyMult
