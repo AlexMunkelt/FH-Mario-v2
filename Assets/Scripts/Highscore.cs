@@ -7,9 +7,13 @@ using UnityEngine.UI;
 public class Highscore : MonoBehaviour
 {
     public TMPro.TextMeshProUGUI newScore, highscore;
+    public GameController gameController;
+    public GameObject healthBar;
+        
     // Start is called before the first frame update
     void Start()
     {
+        healthBar.SetActive(false);
         WriteScore();
     }
 
@@ -27,7 +31,11 @@ public class Highscore : MonoBehaviour
 
     private void WriteScore()
     {
-        newScore.text = "3.7";
-        highscore.text = "2.3";
+        newScore.text = gameController.maxHealth.ToString();
+        highscore.text = PlayerPrefs.GetFloat("highscore").ToString();
+        if(PlayerPrefs.GetFloat("highscore") < gameController.maxHealth)
+        {
+            PlayerPrefs.SetFloat("highscore", gameController.maxHealth);
+        }
     }
 }
