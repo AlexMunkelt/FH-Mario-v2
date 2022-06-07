@@ -32,8 +32,23 @@ public class Player : MonoBehaviour
 
     private Vector3 move = Vector3.zero;
 
+    
+
     void Start()
     {
+<<<<<<< Updated upstream
+=======
+
+
+        if (ToggleCoop.instance)
+        {
+            if (!ToggleCoop.instance.coop && playertype == Playertype.Player2)
+            {
+                this.gameObject.SetActive(false);
+            }
+        }
+
+>>>>>>> Stashed changes
         rb = this.GetComponent<Rigidbody>();
 
         StartCoroutine(Animation());
@@ -43,6 +58,14 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+<<<<<<< Updated upstream
+=======
+      
+    }
+
+    private void FixedUpdate()
+    {
+>>>>>>> Stashed changes
         Movement();
     }
 
@@ -242,6 +265,62 @@ public class Player : MonoBehaviour
         canMove = true;
     }
 
+<<<<<<< Updated upstream
+=======
+    public void GetHit(int damage)
+    {
+        controller.health -= damage;
+    }
+
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Collectible"))
+        {
+            NoteCollectible tmp = other.gameObject.GetComponent<NoteCollectible>();
+
+            switch (tmp.note)
+            {
+                case NoteCollectible.Note.A:
+                    controller.count_colectables++;
+                    controller.collectables++;
+                    Destroy(other.gameObject);
+                    break;
+                case NoteCollectible.Note.B:
+                    controller.count_colectables += 2;
+                    controller.collectables++;
+                    Destroy(other.gameObject);
+                    break;
+                case NoteCollectible.Note.C:
+                    controller.count_colectables += 3;
+                    controller.collectables++;
+                    Destroy(other.gameObject);
+                    break;
+                case NoteCollectible.Note.D:
+                    controller.count_colectables += 4;
+                    controller.collectables++;
+                    Destroy(other.gameObject);
+                    break;
+                case NoteCollectible.Note.E:
+                    controller.count_colectables += 5;
+                    controller.collectables++;
+                    Destroy(other.gameObject);
+                    break;
+                case NoteCollectible.Note.F:
+                    controller.count_colectables += 6;
+                    controller.collectables++;
+                    Destroy(other.gameObject);
+                    break;
+                default:
+                    break;
+            }
+
+
+        }
+    }
+
+
+>>>>>>> Stashed changes
     #region UnitTests
 
     public void HorizontalMovementTest()
