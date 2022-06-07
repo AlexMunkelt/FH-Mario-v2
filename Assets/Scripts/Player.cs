@@ -13,7 +13,11 @@ public class Player : MonoBehaviour
     public float speed = 1f;
     public float acceleration = 1f;
     public float jumpStrength = 1f;
+    public float jumpOnEnemyMult = 2f;
     public LayerMask layerMask;
+
+    public bool canMove = true;
+    public bool canJump = true;
 
     public enum Playertype { Player1, Player2 };
     private enum State { Idle, Running, Jumping};
@@ -24,22 +28,41 @@ public class Player : MonoBehaviour
     private bool isJumping = false;
     private bool touchedLeftWall = false;
     private bool touchedRightWall = false;
-    private bool canMove = true;
 
     private int runIndex = 0;
 
     private Vector3 move = Vector3.zero;
+    private Vector3 startPos;
+    private GameController controller;
 
     void Start()
     {
-        rb = this.GetComponent<Rigidbody>();
+        if (ToggleCoop.instance)
+        {
+            if (!ToggleCoop.instance.coop && playertype == Playertype.Player2)
+            {
+                this.gameObject.SetActive(false);
+            }
+        }
 
-        StartCoroutine(Animation());
+        rb = this.GetComponent<Rigidbody>();
+        startPos = this.transform.position;
+        controller = GameController.instance;
+
+        if (this.gameObject.activeSelf)
+        {
+            StartCoroutine(Animation());
+        }
 
         HorizontalMovementTest();
     }
 
     void Update()
+    {
+
+    }
+
+    private void FixedUpdate()
     {
         Movement();
     }
@@ -71,64 +94,28 @@ public class Player : MonoBehaviour
                 this.transform.rotation = Quaternion.Euler(0, 90, 0);
             }
 
-            move.x = hor * speed;
+            move.x = hor * speed * Time.deltaTime;
         }
 
-        if (move.x != 0 && isGrounded)
+        if (move.x != 0 && isGrounded && !isJumping)
         {
             state = State.Running;
         }
-        else if (isGrounded)
+        else if (isGrounded && !isJumping)
         {
             state = State.Idle;
+        } else
+        {
+            state = State.Jumping;
         }
+
+        rb.velocity = Vector3.Lerp(rb.velocity, move, 1f);
 
         #endregion
 
         #region Jumping
 
-        if (Input.GetKey(KeyCode.W) && isGrounded && playertype == Playertype.Player1)
-        {
-            if (!isJumping)
-            {
-                rb.AddForce(new Vector2(0, 1 * jumpStrength), ForceMode.Impulse);
-                isJumping = true;
-
-                state = State.Jumping;
-            }
-            //move.y = jumpStrength;
-        }
-
-        if (Input.GetKey(KeyCode.UpArrow) && isGrounded && playertype == Playertype.Player2)
-        {
-            if (!isJumping)
-            {
-                rb.AddForce(new Vector2(0, 1 * jumpStrength), ForceMode.Impulse);
-                isJumping = true;
-
-                state = State.Jumping;
-            }
-            //move.y = jumpStrength;
-        }
-
-        // Walljumping
-        //if (Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.A) && touchedLeftWall)
-        //{
-        //    move.y = jumpStrength;
-        //    move.x = speed;
-
-        //    StartCoroutine(CanMoveAgain(0.5f));
-        //}
-
-        //if (Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.D) && touchedRightWall)
-        //{
-        //    move.y = jumpStrength;
-        //    move.x = -speed;
-
-        //    StartCoroutine(CanMoveAgain(0.5f));
-        //}
-
-        rb.velocity = Vector3.Lerp(rb.velocity, move, 1f);
+        JumpingBehaviour();
 
         #endregion
 
@@ -172,6 +159,56 @@ public class Player : MonoBehaviour
         }
 
         #endregion
+    }
+
+    public void JumpingBehaviour()
+    {
+        if (canJump)
+        {
+            if (Input.GetKey(KeyCode.W) && isGrounded && playertype == Playertype.Player1)
+            {
+                if (!isJumping)
+                {
+                    Jump();
+                }
+                //move.y = jumpStrength;
+            }
+
+            if (Input.GetKey(KeyCode.UpArrow) && isGrounded && playertype == Playertype.Player2)
+            {
+                if (!isJumping)
+                {
+                    Jump();
+                }
+                //move.y = jumpStrength;
+            }
+
+            // Walljumping
+            //if (Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.A) && touchedLeftWall)
+            //{
+            //    move.y = jumpStrength;
+            //    move.x = speed;
+
+            //    StartCoroutine(CanMoveAgain(0.5f));
+            //}
+
+            //if (Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.D) && touchedRightWall)
+            //{
+            //    move.y = jumpStrength;
+            //    move.x = -speed;
+
+            //    StartCoroutine(CanMoveAgain(0.5f));
+            //}
+        }
+    }
+
+    public void Jump(float mult = 1f)
+    {
+        rb.AddForce(new Vector2(0, 1 * jumpStrength * mult * Time.deltaTime), ForceMode.Impulse);
+
+        isJumping = true;
+
+        state = State.Jumping;
     }
 
     private IEnumerator Animation()
@@ -228,6 +265,11 @@ public class Player : MonoBehaviour
         yield return new WaitForSeconds(timeUntilMoveAgain);
 
         canMove = true;
+    }
+
+    public void GetHit(int damage)
+    {
+        controller.health -= damage;
     }
 
     #region UnitTests
