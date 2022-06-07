@@ -13,10 +13,13 @@ public class Player : MonoBehaviour
     public float speed = 1f;
     public float acceleration = 1f;
     public float jumpStrength = 1f;
+    public float doubleJumpMult = 2.5f;
+    public float jumpOnEnemyMult = 2f;
     public LayerMask layerMask;
 
     public bool canMove = true;
     public bool canJump = true;
+    public bool canDoubleJump = true;
 
     public enum Playertype { Player1, Player2 };
     private enum State { Idle, Running, Jumping};
@@ -25,21 +28,18 @@ public class Player : MonoBehaviour
     private Rigidbody rb;
     private bool isGrounded = false;
     private bool isJumping = false;
+    private bool isDoubleJumping = false;
     private bool touchedLeftWall = false;
     private bool touchedRightWall = false;
 
     private int runIndex = 0;
 
     private Vector3 move = Vector3.zero;
-
-    
+    private Vector3 startPos;
+    private GameController controller;
 
     void Start()
     {
-<<<<<<< Updated upstream
-=======
-
-
         if (ToggleCoop.instance)
         {
             if (!ToggleCoop.instance.coop && playertype == Playertype.Player2)
@@ -48,24 +48,25 @@ public class Player : MonoBehaviour
             }
         }
 
->>>>>>> Stashed changes
         rb = this.GetComponent<Rigidbody>();
+        startPos = this.transform.position;
+        controller = GameController.instance;
 
-        StartCoroutine(Animation());
+        if (this.gameObject.activeSelf)
+        {
+            StartCoroutine(Animation());
+        }
 
         HorizontalMovementTest();
     }
 
     void Update()
     {
-<<<<<<< Updated upstream
-=======
-      
+
     }
 
     private void FixedUpdate()
     {
->>>>>>> Stashed changes
         Movement();
     }
 
@@ -96,16 +97,19 @@ public class Player : MonoBehaviour
                 this.transform.rotation = Quaternion.Euler(0, 90, 0);
             }
 
-            move.x = hor * speed;
+            move.x = hor * speed * Time.deltaTime;
         }
 
-        if (move.x != 0 && isGrounded)
+        if (move.x != 0 && isGrounded && !isJumping)
         {
             state = State.Running;
         }
-        else if (isGrounded)
+        else if (isGrounded && !isJumping)
         {
             state = State.Idle;
+        } else
+        {
+            state = State.Jumping;
         }
 
         rb.velocity = Vector3.Lerp(rb.velocity, move, 1f);
@@ -126,7 +130,9 @@ public class Player : MonoBehaviour
         {
             Debug.DrawRay(transform.position + new Vector3(0, 1, 0), transform.TransformDirection(-transform.up) * hit.distance, Color.red);
             isGrounded = true;
+            canJump = true;
             isJumping = false;
+            isDoubleJumping = false;
         }
         else
         {
@@ -164,46 +170,61 @@ public class Player : MonoBehaviour
     {
         if (canJump)
         {
-            if (Input.GetKey(KeyCode.W) && isGrounded && playertype == Playertype.Player1)
+            if (Input.GetKey(KeyCode.W) && playertype == Playertype.Player1)
             {
-                if (!isJumping)
+                if (!isJumping && isGrounded)
                 {
+                    canJump = false;
                     Jump();
                 }
-                //move.y = jumpStrength;
+                else if (canDoubleJump && !isDoubleJumping)
+                {
+                    canJump = false;
+                    isDoubleJumping = true;
+
+                    Jump(doubleJumpMult);
+                }
             }
 
-            if (Input.GetKey(KeyCode.UpArrow) && isGrounded && playertype == Playertype.Player2)
+            if (Input.GetKey(KeyCode.UpArrow) && playertype == Playertype.Player2)
             {
-                if (!isJumping)
+                if (!isJumping && isGrounded)
                 {
+                    canJump = false;
                     Jump();
                 }
-                //move.y = jumpStrength;
+                else if (canDoubleJump && !isDoubleJumping)
+                {
+                    canJump = false;
+                    isDoubleJumping = true;
+
+                    Jump(doubleJumpMult);
+                }
             }
-
-            // Walljumping
-            //if (Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.A) && touchedLeftWall)
-            //{
-            //    move.y = jumpStrength;
-            //    move.x = speed;
-
-            //    StartCoroutine(CanMoveAgain(0.5f));
-            //}
-
-            //if (Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.D) && touchedRightWall)
-            //{
-            //    move.y = jumpStrength;
-            //    move.x = -speed;
-
-            //    StartCoroutine(CanMoveAgain(0.5f));
-            //}
         }
+
+        if (Input.GetKeyUp(KeyCode.W) && playertype == Playertype.Player1)
+        {
+            canJump = true;
+        }
+
+        if (Input.GetKeyUp(KeyCode.UpArrow) && playertype == Playertype.Player2)
+        {
+            canJump = true;
+        }
+    }
+
+    void ResetYVelocity()
+    {
+        rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+        rb.angularVelocity = new Vector3(rb.angularVelocity.x, 0f, rb.angularVelocity.z);
     }
 
     public void Jump(float mult = 1f)
     {
-        rb.AddForce(new Vector2(0, 1 * jumpStrength * mult), ForceMode.Impulse);
+        ResetYVelocity();
+        rb.AddForce(new Vector2(0, 1 * jumpStrength * mult * Time.deltaTime), ForceMode.Impulse);
+
         isJumping = true;
 
         state = State.Jumping;
@@ -265,62 +286,11 @@ public class Player : MonoBehaviour
         canMove = true;
     }
 
-<<<<<<< Updated upstream
-=======
     public void GetHit(int damage)
     {
         controller.health -= damage;
     }
 
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.CompareTag("Collectible"))
-        {
-            NoteCollectible tmp = other.gameObject.GetComponent<NoteCollectible>();
-
-            switch (tmp.note)
-            {
-                case NoteCollectible.Note.A:
-                    controller.count_colectables++;
-                    controller.collectables++;
-                    Destroy(other.gameObject);
-                    break;
-                case NoteCollectible.Note.B:
-                    controller.count_colectables += 2;
-                    controller.collectables++;
-                    Destroy(other.gameObject);
-                    break;
-                case NoteCollectible.Note.C:
-                    controller.count_colectables += 3;
-                    controller.collectables++;
-                    Destroy(other.gameObject);
-                    break;
-                case NoteCollectible.Note.D:
-                    controller.count_colectables += 4;
-                    controller.collectables++;
-                    Destroy(other.gameObject);
-                    break;
-                case NoteCollectible.Note.E:
-                    controller.count_colectables += 5;
-                    controller.collectables++;
-                    Destroy(other.gameObject);
-                    break;
-                case NoteCollectible.Note.F:
-                    controller.count_colectables += 6;
-                    controller.collectables++;
-                    Destroy(other.gameObject);
-                    break;
-                default:
-                    break;
-            }
-
-
-        }
-    }
-
-
->>>>>>> Stashed changes
     #region UnitTests
 
     public void HorizontalMovementTest()
