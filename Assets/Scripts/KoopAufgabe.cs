@@ -44,7 +44,6 @@ public class KoopAufgabe : MonoBehaviour
         //Push down btn if player is on it
         if(player.transform.position == btn.transform.position)
         {
-            PushDown(btn);
             return true;
         }
         return false;
@@ -66,6 +65,22 @@ public class KoopAufgabe : MonoBehaviour
             btnY -= 0.01f;
         }
     }
+    
+    //Push up button
+    void PushUp(GameObject btn)
+    {
+        //Get Color of btn
+        Color c = btn.GetComponent<Renderer>().material.color;
+        //Remove Glow Effect from btn
+        btn.GetComponent<Renderer>().material.SetColor("_EmissionColor", new Color(0, 0, 0, 0));
+        
+        var btnY = btn.transform.position.y;
+        while (btnY <= 0.05f)
+        {
+            btn.transform.position = new Vector3(btn.transform.position.x, btnY, btn.transform.position.z);
+            btnY += 0.01f;
+        }
+    }
 
     void OpenDoor(GameObject door)
     {
@@ -81,6 +96,24 @@ public class KoopAufgabe : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(PlayerOnBtn(btns[0], players[0]) || PlayerOnBtn(btns[0], players[1]))
+        {
+            PushDown(btns[0]);
+        }
+        else
+        {
+            PushUp(btns[0]);
+        }
+        
+        if(PlayerOnBtn(btns[1], players[0]) || PlayerOnBtn(btns[1], players[1]))
+        {
+            PushDown(btns[1]);
+        }
+        else
+        {
+            PushUp(btns[1]);
+        }
+        
         if(PlayerOnBtn(btns[0], players[0]) && PlayerOnBtn(btns[1], players[1]))
         {
             btnsPushed = true;
