@@ -22,7 +22,7 @@ public class Player : MonoBehaviour
     public bool canDoubleJump = true;
 
     public enum Playertype { Player1, Player2 };
-    private enum State { Idle, Running, Jumping};
+    private enum State { Idle, Running, Jumping };
 
     private State state = State.Idle;
     private Rigidbody rb;
@@ -291,9 +291,55 @@ public class Player : MonoBehaviour
         controller.health -= damage;
     }
 
-    #region UnitTests
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Collectible"))
+        {
+            NoteCollectible tmp = other.gameObject.GetComponent<NoteCollectible>();
 
-    public void HorizontalMovementTest()
+            switch (tmp.note)
+            {
+                case NoteCollectible.Note.A:
+                    controller.count_colectables++;
+                    controller.collectables++;
+                    Destroy(other.gameObject);
+                    break;
+                case NoteCollectible.Note.B:
+                    controller.count_colectables += 2;
+                    controller.collectables++;
+                    Destroy(other.gameObject);
+                    break;
+                case NoteCollectible.Note.C:
+                    controller.count_colectables += 3;
+                    controller.collectables++;
+                    Destroy(other.gameObject);
+                    break;
+                case NoteCollectible.Note.D:
+                    controller.count_colectables += 4;
+                    controller.collectables++;
+                    Destroy(other.gameObject);
+                    break;
+                case NoteCollectible.Note.E:
+                    controller.count_colectables += 5;
+                    controller.collectables++;
+                    Destroy(other.gameObject);
+                    break;
+                case NoteCollectible.Note.F:
+                    controller.count_colectables += 6;
+                    controller.collectables++;
+                    Destroy(other.gameObject);
+                    break;
+                default:
+                    break;
+            }
+
+
+        }
+    }
+
+        #region UnitTests
+
+        public void HorizontalMovementTest()
     {
         try
         {
