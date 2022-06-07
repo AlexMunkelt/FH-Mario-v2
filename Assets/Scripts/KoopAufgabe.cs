@@ -10,20 +10,76 @@ public class KoopAufgabe : MonoBehaviour
 
     private GameObject[] players;
     
+    private bool btnsPushed = false;
+    
     // Start is called before the first frame update
     void Start()
     {
         btns = new[] {GameObject.Find("Btn1"), GameObject.Find("Btn2")};
         doors = new[] {GameObject.Find("Door"), GameObject.Find("Door2")};
         players = new[] {GameObject.Find("Player"), GameObject.Find("Player2")};
+        
+        //Add Rigidbody
+        foreach (GameObject[] a in new []{btns, doors})
+        {
+            foreach (GameObject o in a)
+            {
+                o.AddComponent<Rigidbody>();
+            }
+        }
+        
     }
     
-    // Add Collider to Buttons
-    void 
+    bool PlayerOnBtn(GameObject btn, GameObject player)
+    {
+        if (player.transform.position.y.Equals(btn.transform.position.y))
+        {
+            PushDown(btn);
+            return true;
+        }
+        return false;
+    }
+    
+    //Push down button
+    void PushDown(GameObject btn)
+    {
+        var btnY = btn.transform.position.y;
+        while (btnY >= -0.05f)
+        {
+            btn.transform.position = new Vector3(btn.transform.position.x, btnY, btn.transform.position.z);
+            btnY -= 0.01f;
+        }
+    }
+    
+    void OpenDoor(GameObject door)
+    {
+        //Rotate door to open
+        var doorRot = door.transform.rotation.eulerAngles.y;
+        while (doorRot <= 90)
+        {
+            door.transform.rotation = Quaternion.Euler(0, doorRot, 0);
+            doorRot += 1;
+        }
+    }
 
     // Update is called once per frame
     void Update()
     {
+        if(PlayerOnBtn(btns[0], players[0]) && PlayerOnBtn(btns[1], players[1]))
+        {
+            btnsPushed = true;
+        }else if(PlayerOnBtn(btns[0], players[1]) && PlayerOnBtn(btns[1], players[0]))
+        {
+            btnsPushed = true;
+        }
+        
+        if(btnsPushed)
+        {
+            foreach (var door in doors)
+            {
+                OpenDoor(door);
+            }
+        }
         
     }
 }
