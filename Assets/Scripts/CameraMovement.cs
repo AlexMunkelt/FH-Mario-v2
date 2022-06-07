@@ -80,14 +80,12 @@ public class CameraMovement : MonoBehaviour
         }
         else
         {
-<<<<<<< Updated upstream
             Camera_Pos = Camera.main.transform.position;
 =======
             var pos = Player1.transform.position;
             pos.z = Camera.main.transform.position.z;
             pos.y += 2f;
             Camera.main.transform.position = pos;
->>>>>>> Stashed changes
         }
     }
 
@@ -175,14 +173,12 @@ public class CameraMovement : MonoBehaviour
         }
         else
         {
-<<<<<<< Updated upstream
             Camera.main.transform.position = Player1.transform.position;
 =======
             var pos = Player1.transform.position;
             pos.z = Camera.main.transform.position.z;
             pos.y += 2f;
             Camera.main.transform.position = pos;
->>>>>>> Stashed changes
         }
     }
 }
