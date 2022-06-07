@@ -9,10 +9,6 @@ public class KoopAufgabe : MonoBehaviour
     private GameObject[] doors;
 
     private GameObject[] players;
-
-    private float btn1Y;
-    
-    private float btn2Y;
     
     private bool btnsPushed = false;
     
@@ -22,8 +18,6 @@ public class KoopAufgabe : MonoBehaviour
         btns = new[] {GameObject.Find("Btn1"), GameObject.Find("Btn2")};
         doors = new[] {GameObject.Find("Door"), GameObject.Find("Door2")};
         players = new[] {GameObject.Find("Player"), GameObject.Find("Player2")};
-        btn1Y = btns[0].transform.position.y;
-        btn2Y = btns[1].transform.position.y;
         
         //Add Colliders
         foreach (GameObject door in doors)
