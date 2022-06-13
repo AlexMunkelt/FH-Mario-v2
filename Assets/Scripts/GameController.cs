@@ -27,6 +27,9 @@ public class GameController : MonoBehaviour
     public int count_colectables;
     public float note;
 
+    public GameObject tutorial1;
+    public GameObject tutorial2;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -57,6 +60,12 @@ public class GameController : MonoBehaviour
         if (health <= 0)
         {
             GameOver();
+        }
+
+        if (Input.GetKey(KeyCode.W))
+        {
+            tutorial1.SetActive(false);
+            tutorial2.SetActive(true);
         }
     }
 
