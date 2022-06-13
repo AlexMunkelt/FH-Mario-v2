@@ -62,7 +62,7 @@ public class GameController : MonoBehaviour
             GameOver();
         }
 
-        if (Input.GetKey(KeyCode.W))
+        if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
         {
             tutorial1.SetActive(false);
             tutorial2.SetActive(true);
