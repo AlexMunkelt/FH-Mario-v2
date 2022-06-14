@@ -8,6 +8,7 @@ public class LapSlapper : Enemy
     public float speed;
     public float animationSpeed;
     public GameObject[] animations;
+    public LayerMask layerMask;
 
     private int index = 0;
 
@@ -24,6 +25,31 @@ public class LapSlapper : Enemy
     public override void Update()
     {
         base.Update();
+
+        RaycastHit hit;
+
+        if (this.transform.eulerAngles.y == 270)
+        {
+            if (Physics.Raycast(transform.position + new Vector3(0, 0.5f, 0), transform.TransformDirection(-transform.right), out hit, 1f, layerMask))
+            {
+                Debug.DrawRay(transform.position + new Vector3(0, 0.5f, 0), transform.TransformDirection(-transform.right) * hit.distance, Color.red);
+                StopAllCoroutines();
+                StartCoroutine(Animation());
+                StartCoroutine(Behaviour());
+                Turn();
+            }
+        }
+        else if (this.transform.eulerAngles.y == 90)
+        {
+            if (Physics.Raycast(transform.position + new Vector3(0, 0.5f, 0), transform.TransformDirection(transform.right), out hit, 1f, layerMask))
+            {
+                Debug.DrawRay(transform.position + new Vector3(0, 0.5f, 0), transform.TransformDirection(transform.right) * hit.distance, Color.red);
+                StopAllCoroutines();
+                StartCoroutine(Animation());
+                StartCoroutine(Behaviour());
+                Turn();
+            }
+        }
 
         Move();
     }
@@ -72,5 +98,17 @@ public class LapSlapper : Enemy
         }
 
         StartCoroutine(Behaviour());
+    }
+
+    private void Turn()
+    {
+        if (this.transform.eulerAngles.y == 270)
+        {
+            this.transform.rotation = Quaternion.Euler(0, 90, 0);
+        }
+        else if (this.transform.eulerAngles.y == 90)
+        {
+            this.transform.rotation = Quaternion.Euler(0, -90, 0);
+        }
     }
 }
