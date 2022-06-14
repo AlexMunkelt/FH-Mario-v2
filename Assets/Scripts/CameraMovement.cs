@@ -1,12 +1,15 @@
 using static System.Math;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class CameraMovement : MonoBehaviour
 {
-    [SerializeField] private int MaxFOV = 20;
+    [SerializeField] private int maxFOV = 20;
     [SerializeField] private float expandColliderBox = 3.75f;
+    [SerializeField] private float expandMinFOV = 5f;
+    [SerializeField] private float fixFovY = 3f;
     
     private GameObject player1;
 
@@ -20,7 +23,7 @@ public class CameraMovement : MonoBehaviour
 
     private float cameraFix;
 
-    bool checkCoop()
+    bool CheckCoop()
     {
         if (ToggleCoop.instance == null)
         {
@@ -35,7 +38,7 @@ public class CameraMovement : MonoBehaviour
     {
         AddCollider();
         player1 = GameObject.Find("Player");
-        if (checkCoop())
+        if (CheckCoop())
         {
             cameraFix = 2.75f;
             player2 = GameObject.Find("Player2");
@@ -43,7 +46,7 @@ public class CameraMovement : MonoBehaviour
             middleVec.z = Camera.main.transform.position.z;
             middleVec.y += cameraFix;
             Camera.main.transform.position = middleVec;
-            minFOV = Camera.main.fieldOfView + 5f;
+            minFOV = Camera.main.fieldOfView + expandMinFOV;
         }
         else
         {
@@ -75,7 +78,7 @@ public class CameraMovement : MonoBehaviour
             Camera.main.transform.position = cameraPos;
             
             //get max x position of the camera view
-            float maxX = Camera.main.transform.position.x + Camera.main.orthographicSize + expandColliderBox;
+            var maxX = Camera.main.transform.position.x + Camera.main.orthographicSize + expandColliderBox;
             //prevent player from moving to right
             Player.transform.position = new Vector3(maxX, Player.transform.position.y, Player.transform.position.z);
             
@@ -87,7 +90,7 @@ public class CameraMovement : MonoBehaviour
             //lock position of camera
             Camera.main.transform.position = cameraPos;
             //get min x position of the camera view
-            float minX = Camera.main.transform.position.x - Camera.main.orthographicSize - expandColliderBox;
+            var minX = Camera.main.transform.position.x - Camera.main.orthographicSize - expandColliderBox;
             //prevent player from moving to left
             Player.transform.position = new Vector3(minX, Player.transform.position.y, Player.transform.position.z);
         }
@@ -98,31 +101,34 @@ public class CameraMovement : MonoBehaviour
     }
 
 
-    private float calcFOV(GameObject P1, GameObject P2)
+    private float CalcFOV(GameObject p1, GameObject p2)
     {
-        float fov = 0f;
-        var p1Pos = P1.transform.position;
-        var p2Pos = P2.transform.position;
+        var fov = 0f;
+        var p1Pos = p1.transform.position;
+        var p2Pos = p2.transform.position;
+        var gk = new float();
+        var ak = new float();
+        var hy = new double();
+        var alpha = new double();
+        
         if (Max(p1Pos.y, p2Pos.y) > Camera.main.rect.yMax)
         {
-            float GK = Abs(Abs(p1Pos.y) - Abs(p2Pos.y)) + 3f;
-            float aspectRatio = GK / Max(p1Pos.x, p2Pos.x);
-            float AK = Abs(Camera.main.transform.position.z - Max(p1Pos.z, p2Pos.z));
-            double HY = Sqrt(Pow(GK, 2) + Pow(AK, 2));
-            double alpha = Asin(GK / HY);
+            gk = Abs(Abs(p1Pos.y) - Abs(p2Pos.y)) + fixFovY;
+            var aspectRatio = gk / Max(p1Pos.x, p2Pos.x);
+            ak = Abs(Camera.main.transform.position.z - Max(p1Pos.z, p2Pos.z));
+            hy = Sqrt(Pow(gk, 2) + Pow(ak, 2));
+            alpha = Asin(gk / hy);
             fov = Mathf.Rad2Deg * (float) alpha * 2;
             fov = Camera.VerticalToHorizontalFieldOfView(fov, aspectRatio);
         }
         else
         {
-            float GK = Abs(Abs(p1Pos.x) - Abs(p2Pos.x));
-            float AK = Abs(Camera.main.transform.position.z - Max(p1Pos.z, p2Pos.z));
-            double HY = Sqrt(Pow(GK, 2) + Pow(AK, 2));
-            double alpha = Asin(GK / HY);
+            gk = Abs(Abs(p1Pos.x) - Abs(p2Pos.x));
+            ak = Abs(Camera.main.transform.position.z - Max(p1Pos.z, p2Pos.z));
+            hy = Sqrt(Pow(gk, 2) + Pow(ak, 2));
+            alpha = Asin(gk / hy);
             fov = Mathf.Rad2Deg * (float) alpha * 2;
         }
-        print("FOV: " + fov);
-        print("Camera FOV: " + Camera.main.fieldOfView);
         return fov;
     }
 
@@ -140,7 +146,7 @@ public class CameraMovement : MonoBehaviour
     void Update()
     {
         player1 = GameObject.Find("Player");
-        if (checkCoop())
+        if (CheckCoop())
         {
             player2 = GameObject.Find("Player2");
             //create list of players
@@ -152,8 +158,8 @@ public class CameraMovement : MonoBehaviour
             middleVec.y += cameraFix;
             middleVec.z = Camera.main.transform.position.z;
             Camera.main.transform.position = middleVec;
-            float fov = calcFOV(player1, player2);
-            if (fov >= minFOV && fov <= MaxFOV)
+            var fov = CalcFOV(player1, player2);
+            if (fov >= minFOV && fov <= maxFOV)
             {
                 var fps = 1f / Time.deltaTime;
                 var cam = Camera.main;
