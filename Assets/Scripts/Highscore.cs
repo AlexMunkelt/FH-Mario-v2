@@ -31,11 +31,12 @@ public class Highscore : MonoBehaviour
 
     private void WriteScore()
     {
-        newScore.text = gameController.note.ToString();
+        newScore.text = gameController.highscore.ToString();
         highscore.text = PlayerPrefs.GetFloat("highscore").ToString();
-        if(gameController.note > 0 && PlayerPrefs.GetFloat("highscore") > gameController.note)
+        if(gameController.note > 0 && PlayerPrefs.GetFloat("highscore") < gameController.highscore)
         {
-            PlayerPrefs.SetFloat("highscore", gameController.note);
+            PlayerPrefs.SetFloat("highscore", gameController.highscore);
+            PlayerPrefs.SetFloat("durchschnittsnote", gameController.note);
         }
     }
 }

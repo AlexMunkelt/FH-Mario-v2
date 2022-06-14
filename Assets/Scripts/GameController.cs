@@ -26,6 +26,8 @@ public class GameController : MonoBehaviour
     public int collectables;
     public int count_colectables;
     public float note;
+    public float timePassed = 0;
+    public float highscore = 1000;
 
     public GameObject tutorial1;
     public GameObject tutorial2;
@@ -39,6 +41,8 @@ public class GameController : MonoBehaviour
         count_colectables = 0;
 
         health = maxHealth;
+
+        StartCoroutine(ReduceHS());
     }
 
     // Update is called once per frame
@@ -47,6 +51,7 @@ public class GameController : MonoBehaviour
         if (count_colectables != 0)
         {
             note = count_colectables / collectables;
+            highscore = (1000 / note - timePassed / note) * count_colectables;
         }
         if (Input.GetKey(KeyCode.C))
         {
@@ -55,7 +60,7 @@ public class GameController : MonoBehaviour
             Debug.Log("You have: " + count_colectables + " count");
         }
 
-        textDisplay.text = "Durchschnittsnote: " + note;
+        textDisplay.text = "Durchschnittsnote: " + note + " Highscore: " + highscore;
 
         healthbarFront.fillAmount = (float) health / (float) maxHealth;
 
@@ -83,5 +88,16 @@ public class GameController : MonoBehaviour
         SceneManager.LoadScene("Menu");
     }
 
-    
+    IEnumerator ReduceHS()
+    {
+        yield return new WaitForSeconds(1);
+
+        if(timePassed < 1000)
+        {
+            timePassed++;
+        }
+
+        StartCoroutine(ReduceHS());
+    }
+
 }
