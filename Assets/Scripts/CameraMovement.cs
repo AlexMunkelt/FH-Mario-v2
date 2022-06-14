@@ -7,7 +7,7 @@ using UnityEngine;
 public class CameraMovement : MonoBehaviour
 {
     [SerializeField] private float maxFOV = 30f;
-    [SerializeField] private float expandColliderBox = 2f;
+    [SerializeField] private float expandColliderBox = 3.75f;
     private GameObject player1;
 
     private GameObject player2;
@@ -22,7 +22,6 @@ public class CameraMovement : MonoBehaviour
     
     bool CheckCoop()
     {
-
         return !ToggleCoop.instance.Equals(null);
     }
     
