@@ -30,6 +30,8 @@ public class GameController : MonoBehaviour
     public GameObject tutorial1;
     public GameObject tutorial2;
 
+    public Player player;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -62,10 +64,17 @@ public class GameController : MonoBehaviour
             GameOver();
         }
 
-        if (Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
+        if (tutorial1.active && player.transform.position.x > 50)
         {
             tutorial1.SetActive(false);
+        }
+        if (!tutorial2.active && player.transform.position.x > 70)
+        {
             tutorial2.SetActive(true);
+        }
+        if (tutorial2.active && player.transform.position.x > 85)
+        {
+            tutorial2.SetActive(false);
         }
     }
 
