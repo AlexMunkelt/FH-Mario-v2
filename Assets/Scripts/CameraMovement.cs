@@ -6,7 +6,7 @@ using UnityEngine;
 /// </summary>
 public class CameraMovement : MonoBehaviour
 {
-    [SerializeField] private float maxFOV = 30f;
+    [SerializeField] private float maxFOV = 20f;
     [SerializeField] private float expandColliderBox = 3.75f;
     private GameObject player1;
 
