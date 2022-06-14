@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class CameraMovement : MonoBehaviour
 {
-    [SerializeField] private int maxFOV = 20;
+    [SerializeField] private float maxFOV = 20f;
     [SerializeField] private float expandColliderBox = 3.75f;
     [SerializeField] private float expandMinFOV = 5f;
     [SerializeField] private float fixFovY = 3f;
