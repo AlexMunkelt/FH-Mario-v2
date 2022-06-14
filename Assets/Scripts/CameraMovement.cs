@@ -1,13 +1,20 @@
-using static System.Math;
 using System.Collections.Generic;
+using static System.Math;
 using UnityEngine;
 
+/// <summary>
+/// Class that handles the camera movement and zoom.
+/// </summary>
 public class CameraMovement : MonoBehaviour
 {
     [SerializeField] private float maxFOV = 20f;
     [SerializeField] private float expandColliderBox = 3.75f;
     [SerializeField] private float expandMinFOV = 5f;
     [SerializeField] private float fixFovY = 3f;
+    
+    private static Camera _cam = Camera.main;
+    
+    private Transform camTransform = _cam.transform;
     
     private GameObject player1;
 
@@ -20,7 +27,7 @@ public class CameraMovement : MonoBehaviour
     private float minFOV;
 
     private float cameraFix;
-
+    
     bool CheckCoop()
     {
 
@@ -37,65 +44,67 @@ public class CameraMovement : MonoBehaviour
             cameraFix = 2.75f;
             player2 = GameObject.Find("Player2");
             middleVec = (player1.transform.position + player2.transform.position) / 2;
-            middleVec.z = Camera.main.transform.position.z;
+            middleVec.z = _cam.transform.position.z;
             middleVec.y += cameraFix;
-            Camera.main.transform.position = middleVec;
-            minFOV = Camera.main.fieldOfView + expandMinFOV;
+            camTransform.position = middleVec;
+            minFOV = _cam.fieldOfView + expandMinFOV;
         }
         else
         {
             cameraFix = 1.75f;
             var tmp = player1.transform.position;
             tmp.y += cameraFix;
-            tmp.z = Camera.main.transform.position.z;
-            Camera.main.transform.position = tmp;
+            tmp.z = _cam.transform.position.z;
+            camTransform.position = tmp;
         }
     }
 
     // add collider to the camera
     private void AddCollider()
     {
-        var collider = gameObject.AddComponent<BoxCollider>();
-        collider.isTrigger = true;
-        collider.size = new Vector3(Camera.main.orthographicSize * 2, Camera.main.orthographicSize * 2, 1);
-        collider.center = new Vector3(0, 0, 0);
+        var boxCollider = gameObject.AddComponent<BoxCollider>();
+        var orthographicSize = _cam.orthographicSize;
+        boxCollider.isTrigger = true;
+        boxCollider.size = new Vector3(orthographicSize * 2, orthographicSize * 2, 1);
+        boxCollider.center = new Vector3(0, 0, 0);
     }
 
     /// <summary>
     /// Prevents a player from moving when he is at the visible edge of the screen.
     /// </summary>
-    /// <param name="Player">
+    /// <param name="player">
     /// The player to check.
     /// </param>
-    private void StopPlayer(GameObject Player)
+    private void StopPlayer(GameObject player)
     {
+        var playerTransform = player.transform;
         //when player is at the right edge of the screen
-        if (Player.transform.position.x > Camera.main.transform.position.x + 
-            Camera.main.orthographicSize + expandColliderBox)
+        if (player.transform.position.x > _cam.transform.position.x + 
+            _cam.orthographicSize + expandColliderBox)
         {
             //lock position of camera
-            Camera.main.transform.position = cameraPos;
+            _cam.transform.position = cameraPos;
             
             //get max x position of the camera view
-            var maxX = Camera.main.transform.position.x + Camera.main.orthographicSize + expandColliderBox;
+            var maxX = camTransform.position.x + _cam.orthographicSize + expandColliderBox;
             //prevent player from moving to right
-            Player.transform.position = new Vector3(maxX, Player.transform.position.y, Player.transform.position.z);
+            playerTransform.position = new Vector3(maxX, player.transform.position.y, playerTransform.position.z);
             
         }
         //when player is at the left edge of the screen
-        else if (Player.transform.position.x < Camera.main.transform.position.x -
-                 Camera.main.orthographicSize - expandColliderBox)
+        else if (player.transform.position.x < _cam.transform.position.x -
+                 _cam.orthographicSize - expandColliderBox)
         {
             //lock position of camera
-            Camera.main.transform.position = cameraPos;
+            _cam.transform.position = cameraPos;
             //get min x position of the camera view
-            var minX = Camera.main.transform.position.x - Camera.main.orthographicSize - expandColliderBox;
+            var minX = camTransform.position.x - _cam.orthographicSize - expandColliderBox;
             //prevent player from moving to left
-            Player.transform.position = new Vector3(minX, Player.transform.position.y, Player.transform.position.z);
+            playerTransform.position = new Vector3(minX, player.transform.position.y, playerTransform.position.z);
         }
         else
         {
-            cameraPos = Camera.main.transform.position;
+            cameraPos = _cam.transform.position;
         }
     }
 
@@ -113,19 +122,16 @@ public class CameraMovement : MonoBehaviour
     /// </returns>
     private float CalcFOV(GameObject p1, GameObject p2)
     {
-        var fov = 0f;
+        float fov, gk, ak;
+        double hy, alpha;
         var p1Pos = p1.transform.position;
         var p2Pos = p2.transform.position;
-        var gk = new float();
-        var ak = new float();
-        var hy = new double();
-        var alpha = new double();
-        
-        if (Max(p1Pos.y, p2Pos.y) > Camera.main.rect.yMax)
+
+        if (Max(p1Pos.y, p2Pos.y) > _cam.rect.yMax)
         {
             gk = Abs(Abs(p1Pos.y) - Abs(p2Pos.y)) + fixFovY;
             var aspectRatio = gk / Max(p1Pos.x, p2Pos.x);
-            ak = Abs(Camera.main.transform.position.z - Max(p1Pos.z, p2Pos.z));
+            ak = Abs(_cam.transform.position.z - Max(p1Pos.z, p2Pos.z));
             hy = Sqrt(Pow(gk, 2) + Pow(ak, 2));
             alpha = Asin(gk / hy);
             fov = Mathf.Rad2Deg * (float) alpha * 2;
@@ -134,7 +140,7 @@ public class CameraMovement : MonoBehaviour
         else
         {
             gk = Abs(Abs(p1Pos.x) - Abs(p2Pos.x));
-            ak = Abs(Camera.main.transform.position.z - Max(p1Pos.z, p2Pos.z));
+            ak = Abs(_cam.transform.position.z - Max(p1Pos.z, p2Pos.z));
             hy = Sqrt(Pow(gk, 2) + Pow(ak, 2));
             alpha = Asin(gk / hy);
             fov = Mathf.Rad2Deg * (float) alpha * 2;
@@ -196,27 +202,25 @@ public class CameraMovement : MonoBehaviour
             //get the middle position of the players
             middleVec = (player1.transform.position + player2.transform.position) / 2;
             middleVec.y += cameraFix;
-            middleVec.z = Camera.main.transform.position.z;
-            Camera.main.transform.position = middleVec;
+            middleVec.z = _cam.transform.position.z;
+            camTransform.position = middleVec;
             var fov = CalcFOV(player1, player2);
             if (fov >= minFOV && fov <= maxFOV)
             {
-                var fps = 1f / Time.deltaTime;
-                var cam = Camera.main;
-                if (fov > cam.fieldOfView)
+                if (fov > _cam.fieldOfView)
                 {
                     //increase camera FOV
                     for (var i = 0f; i <= 1f; i += 0.001f)
                     {
-                        cam.fieldOfView = easeInSine(cam.fieldOfView, fov, i);
+                        _cam.fieldOfView = easeInSine(_cam.fieldOfView, fov, i);
                     }
                 }
-                else if (fov < cam.fieldOfView)
+                else if (fov < _cam.fieldOfView)
                 {
                     //decrease camera FOV
                     for (var i = 1f; i >= 0f; i -= 0.001f)
                     {
-                        cam.fieldOfView = easeOutSine(cam.fieldOfView, fov, i);
+                        _cam.fieldOfView = easeOutSine(_cam.fieldOfView, fov, i);
                     }
                 }
             }
@@ -230,9 +234,9 @@ public class CameraMovement : MonoBehaviour
         else
         {
             var pos = player1.transform.position;
-            pos.z = Camera.main.transform.position.z;
+            pos.z = _cam.transform.position.z;
             pos.y += cameraFix;
-            Camera.main.transform.position = pos;
+            camTransform.position = pos;
         }
     }
 }
