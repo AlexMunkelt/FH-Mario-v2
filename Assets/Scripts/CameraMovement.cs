@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using static System.Math;
 using UnityEngine;
 
@@ -11,10 +10,6 @@ public class CameraMovement : MonoBehaviour
     [SerializeField] private float expandColliderBox = 3.75f;
     [SerializeField] private float expandMinFOV = 5f;
     [SerializeField] private float fixFovY = 3f;
-    
-    private static Camera _cam = Camera.main;
-    
-    private Transform camTransform = _cam.transform;
     
     private GameObject player1;
 
@@ -31,7 +26,7 @@ public class CameraMovement : MonoBehaviour
     bool CheckCoop()
     {
 
-        return ToggleCoop.instance.Equals(null);
+        return !ToggleCoop.instance.Equals(null);
     }
     
     // Start is called before the first frame update
@@ -44,29 +39,28 @@ public class CameraMovement : MonoBehaviour
             cameraFix = 2.75f;
             player2 = GameObject.Find("Player2");
             middleVec = (player1.transform.position + player2.transform.position) / 2;
-            middleVec.z = _cam.transform.position.z;
+            middleVec.z = Camera.main.transform.position.z;
             middleVec.y += cameraFix;
-            camTransform.position = middleVec;
-            minFOV = _cam.fieldOfView + expandMinFOV;
+            Camera.main.transform.position = middleVec;
+            minFOV = Camera.main.fieldOfView + expandMinFOV;
         }
         else
         {
             cameraFix = 1.75f;
             var tmp = player1.transform.position;
             tmp.y += cameraFix;
-            tmp.z = _cam.transform.position.z;
-            camTransform.position = tmp;
+            tmp.z = Camera.main.transform.position.z;
+            Camera.main.transform.position = tmp;
         }
     }
 
     // add collider to the camera
     private void AddCollider()
     {
-        var boxCollider = gameObject.AddComponent<BoxCollider>();
-        var orthographicSize = _cam.orthographicSize;
-        boxCollider.isTrigger = true;
-        boxCollider.size = new Vector3(orthographicSize * 2, orthographicSize * 2, 1);
-        boxCollider.center = new Vector3(0, 0, 0);
+        var collider = gameObject.AddComponent<BoxCollider>();
+        collider.isTrigger = true;
+        collider.size = new Vector3(Camera.main.orthographicSize * 2, Camera.main.orthographicSize * 2, 1);
+        collider.center = new Vector3(0, 0, 0);
     }
 
     /// <summary>
@@ -77,34 +71,33 @@ public class CameraMovement : MonoBehaviour
     /// </param>
     private void StopPlayer(GameObject player)
     {
-        var playerTransform = player.transform;
         //when player is at the right edge of the screen
-        if (player.transform.position.x > _cam.transform.position.x + 
-            _cam.orthographicSize + expandColliderBox)
+        if (player.transform.position.x > Camera.main.transform.position.x + 
+            Camera.main.orthographicSize + expandColliderBox)
         {
             //lock position of camera
-            _cam.transform.position = cameraPos;
+            Camera.main.transform.position = cameraPos;
             
             //get max x position of the camera view
-            var maxX = camTransform.position.x + _cam.orthographicSize + expandColliderBox;
+            var maxX = Camera.main.transform.position.x + Camera.main.orthographicSize + expandColliderBox;
             //prevent player from moving to right
-            playerTransform.position = new Vector3(maxX, player.transform.position.y, playerTransform.position.z);
+            player.transform.position = new Vector3(maxX, player.transform.position.y, player.transform.position.z);
             
         }
         //when player is at the left edge of the screen
-        else if (player.transform.position.x < _cam.transform.position.x -
-                 _cam.orthographicSize - expandColliderBox)
+        else if (player.transform.position.x < Camera.main.transform.position.x -
+                 Camera.main.orthographicSize - expandColliderBox)
         {
             //lock position of camera
-            _cam.transform.position = cameraPos;
+            Camera.main.transform.position = cameraPos;
             //get min x position of the camera view
-            var minX = camTransform.position.x - _cam.orthographicSize - expandColliderBox;
+            var minX = Camera.main.transform.position.x - Camera.main.orthographicSize - expandColliderBox;
             //prevent player from moving to left
-            playerTransform.position = new Vector3(minX, player.transform.position.y, playerTransform.position.z);
+            player.transform.position = new Vector3(minX, player.transform.position.y, player.transform.position.z);
         }
         else
         {
-            cameraPos = _cam.transform.position;
+            cameraPos = Camera.main.transform.position;
         }
     }
 
@@ -122,16 +115,19 @@ public class CameraMovement : MonoBehaviour
     /// </returns>
     private float CalcFOV(GameObject p1, GameObject p2)
     {
-        float fov, gk, ak;
-        double hy, alpha;
+        var fov = 0f;
+        var gk = 0f;
+        var ak = 0f;
+        var hy = 0.0;
+        var alpha = 0.0;
         var p1Pos = p1.transform.position;
         var p2Pos = p2.transform.position;
 
-        if (Max(p1Pos.y, p2Pos.y) > _cam.rect.yMax)
+        if (Max(p1Pos.y, p2Pos.y) > Camera.main.rect.yMax)
         {
             gk = Abs(Abs(p1Pos.y) - Abs(p2Pos.y)) + fixFovY;
             var aspectRatio = gk / Max(p1Pos.x, p2Pos.x);
-            ak = Abs(_cam.transform.position.z - Max(p1Pos.z, p2Pos.z));
+            ak = Abs(Camera.main.transform.position.z - Max(p1Pos.z, p2Pos.z));
             hy = Sqrt(Pow(gk, 2) + Pow(ak, 2));
             alpha = Asin(gk / hy);
             fov = Mathf.Rad2Deg * (float) alpha * 2;
@@ -140,7 +136,7 @@ public class CameraMovement : MonoBehaviour
         else
         {
             gk = Abs(Abs(p1Pos.x) - Abs(p2Pos.x));
-            ak = Abs(_cam.transform.position.z - Max(p1Pos.z, p2Pos.z));
+            ak = Abs(Camera.main.transform.position.z - Max(p1Pos.z, p2Pos.z));
             hy = Sqrt(Pow(gk, 2) + Pow(ak, 2));
             alpha = Asin(gk / hy);
             fov = Mathf.Rad2Deg * (float) alpha * 2;
@@ -202,25 +198,26 @@ public class CameraMovement : MonoBehaviour
             //get the middle position of the players
             middleVec = (player1.transform.position + player2.transform.position) / 2;
             middleVec.y += cameraFix;
-            middleVec.z = _cam.transform.position.z;
-            camTransform.position = middleVec;
+            middleVec.z = Camera.main.transform.position.z;
+            Camera.main.transform.position = middleVec;
             var fov = CalcFOV(player1, player2);
             if (fov >= minFOV && fov <= maxFOV)
             {
-                if (fov > _cam.fieldOfView)
+                var fps = 1f / Time.deltaTime;
+                if (fov > Camera.main.fieldOfView)
                 {
                     //increase camera FOV
                     for (var i = 0f; i <= 1f; i += 0.001f)
                     {
-                        _cam.fieldOfView = easeInSine(_cam.fieldOfView, fov, i);
+                        Camera.main.fieldOfView = easeInSine(Camera.main.fieldOfView, fov, i);
                     }
                 }
-                else if (fov < _cam.fieldOfView)
+                else if (fov < Camera.main.fieldOfView)
                 {
                     //decrease camera FOV
                     for (var i = 1f; i >= 0f; i -= 0.001f)
                     {
-                        _cam.fieldOfView = easeOutSine(_cam.fieldOfView, fov, i);
+                        Camera.main.fieldOfView = easeOutSine(Camera.main.fieldOfView, fov, i);
                     }
                 }
             }
@@ -234,9 +231,9 @@ public class CameraMovement : MonoBehaviour
         else
         {
             var pos = player1.transform.position;
-            pos.z = _cam.transform.position.z;
+            pos.z = Camera.main.transform.position.z;
             pos.y += cameraFix;
-            camTransform.position = pos;
+            Camera.main.transform.position = pos;
         }
     }
 }
