@@ -8,8 +8,8 @@ public class CameraMovement : MonoBehaviour
 {
     [SerializeField] private float maxFOV = 20f;
     [SerializeField] private float expandColliderBox = 3.75f;
-    [SerializeField] private float expandMinFOV = 5f;
-    [SerializeField] private float fixFovY = 3f;
+    [SerializeField] private float expandMinFOV = 0f;
+    [SerializeField] private float fixFovY = 0f;
     
     private GameObject player1;
 
@@ -43,6 +43,7 @@ public class CameraMovement : MonoBehaviour
             middleVec.y += cameraFix;
             Camera.main.transform.position = middleVec;
             minFOV = Camera.main.fieldOfView + expandMinFOV;
+            Camera.main.fieldOfView = minFOV;
         }
         else
         {
@@ -115,11 +116,8 @@ public class CameraMovement : MonoBehaviour
     /// </returns>
     private float CalcFOV(GameObject p1, GameObject p2)
     {
-        var fov = 0f;
-        var gk = 0f;
-        var ak = 0f;
-        var hy = 0.0;
-        var alpha = 0.0;
+        float fov, gk, ak;
+        double hy, alpha;
         var p1Pos = p1.transform.position;
         var p2Pos = p2.transform.position;
 
