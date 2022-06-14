@@ -51,7 +51,7 @@ public class GameController : MonoBehaviour
         if (count_colectables != 0)
         {
             note = count_colectables / collectables;
-            highscore = 1000 / note - timePassed / note;
+            highscore = (1000 / note - timePassed / note) * count_colectables;
         }
         if (Input.GetKey(KeyCode.C))
         {
