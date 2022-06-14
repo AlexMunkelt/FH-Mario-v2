@@ -1,13 +1,13 @@
 using static System.Math;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
+/// <summary>
+/// Class that handles the camera movement and zoom.
+/// </summary>
 public class CameraMovement : MonoBehaviour
 {
-    [SerializeField] private int MaxFOV = 20;
+    [SerializeField] private float maxFOV = 30f;
     [SerializeField] private float expandColliderBox = 3.75f;
-    
     private GameObject player1;
 
     private GameObject player2;
@@ -19,14 +19,13 @@ public class CameraMovement : MonoBehaviour
     private float minFOV;
 
     private float cameraFix;
-
-    bool checkCoop()
+    
+    bool CheckCoop()
     {
         if (ToggleCoop.instance == null)
         {
             return true;
         }
-
         return ToggleCoop.instance.coop;
     }
     
@@ -35,7 +34,7 @@ public class CameraMovement : MonoBehaviour
     {
         AddCollider();
         player1 = GameObject.Find("Player");
-        if (checkCoop())
+        if (CheckCoop())
         {
             cameraFix = 2.75f;
             player2 = GameObject.Find("Player2");
@@ -58,38 +57,43 @@ public class CameraMovement : MonoBehaviour
     // add collider to the camera
     private void AddCollider()
     {
-        BoxCollider collider = gameObject.AddComponent<BoxCollider>();
+        var collider = gameObject.AddComponent<BoxCollider>();
         collider.isTrigger = true;
         collider.size = new Vector3(Camera.main.orthographicSize * 2, Camera.main.orthographicSize * 2, 1);
         collider.center = new Vector3(0, 0, 0);
     }
 
-    //stop player if at the edge of the screen
-    private void StopPlayer(GameObject Player)
+    /// <summary>
+    /// Prevents a player from moving when he is at the visible edge of the screen.
+    /// </summary>
+    /// <param name="player">
+    /// The player to check.
+    /// </param>
+    private void StopPlayer(GameObject player)
     {
         //when player is at the right edge of the screen
-        if (Player.transform.position.x > Camera.main.transform.position.x + 
+        if (player.transform.position.x > Camera.main.transform.position.x + 
             Camera.main.orthographicSize + expandColliderBox)
         {
             //lock position of camera
             Camera.main.transform.position = cameraPos;
             
             //get max x position of the camera view
-            float maxX = Camera.main.transform.position.x + Camera.main.orthographicSize + expandColliderBox;
+            var maxX = Camera.main.transform.position.x + Camera.main.orthographicSize + expandColliderBox;
             //prevent player from moving to right
-            Player.transform.position = new Vector3(maxX, Player.transform.position.y, Player.transform.position.z);
+            player.transform.position = new Vector3(maxX, player.transform.position.y, player.transform.position.z);
             
         }
         //when player is at the left edge of the screen
-        else if (Player.transform.position.x < Camera.main.transform.position.x -
+        else if (player.transform.position.x < Camera.main.transform.position.x -
                  Camera.main.orthographicSize - expandColliderBox)
         {
             //lock position of camera
             Camera.main.transform.position = cameraPos;
             //get min x position of the camera view
-            float minX = Camera.main.transform.position.x - Camera.main.orthographicSize - expandColliderBox;
+            var minX = Camera.main.transform.position.x - Camera.main.orthographicSize - expandColliderBox;
             //prevent player from moving to left
-            Player.transform.position = new Vector3(minX, Player.transform.position.y, Player.transform.position.z);
+            player.transform.position = new Vector3(minX, player.transform.position.y, player.transform.position.z);
         }
         else
         {
@@ -97,40 +101,82 @@ public class CameraMovement : MonoBehaviour
         }
     }
 
-
-    private float calcFOV(GameObject P1, GameObject P2)
+    /// <summary>
+    /// Calculate the camera's field of view based on the distance between the players.
+    /// </summary>
+    /// <param name="p1">
+    /// The first player.
+    /// </param>
+    /// <param name="p2">
+    /// The second player.
+    /// </param>
+    /// <returns>
+    /// The calculated field of view.
+    /// </returns>
+    private float CalcFOV(GameObject p1, GameObject p2)
     {
-        float fov = 0f;
-        var p1Pos = P1.transform.position;
-        var p2Pos = P2.transform.position;
+        float fov, gk, ak;
+        double hy, alpha;
+        var p1Pos = p1.transform.position;
+        var p2Pos = p2.transform.position;
+
         if (Max(p1Pos.y, p2Pos.y) > Camera.main.rect.yMax)
         {
-            float GK = Abs(Abs(p1Pos.y) - Abs(p2Pos.y));
-            float aspectRatio = GK / Max(p1Pos.x, p2Pos.x);
-            float AK = Abs(Camera.main.transform.position.z - Max(p1Pos.z, p2Pos.z));
-            double HY = Sqrt(Pow(GK, 2) + Pow(AK, 2));
-            double alpha = Asin(GK / HY);
+            gk = Abs(Abs(p1Pos.y) - Abs(p2Pos.y)) + 2f;
+            var aspectRatio = gk / Max(p1Pos.x, p2Pos.x);
+            ak = Abs(Camera.main.transform.position.z - Max(p1Pos.z, p2Pos.z));
+            hy = Sqrt(Pow(gk, 2) + Pow(ak, 2));
+            alpha = Asin(gk / hy);
             fov = Mathf.Rad2Deg * (float) alpha * 2;
             fov = Camera.VerticalToHorizontalFieldOfView(fov, aspectRatio);
         }
         else
         {
-            float GK = Abs(Abs(p1Pos.x) - Abs(p2Pos.x));
-            float AK = Abs(Camera.main.transform.position.z - Max(p1Pos.z, p2Pos.z));
-            double HY = Sqrt(Pow(GK, 2) + Pow(AK, 2));
-            double alpha = Asin(GK / HY);
+            gk = Abs(Abs(p1Pos.x) - Abs(p2Pos.x));
+            ak = Abs(Camera.main.transform.position.z - Max(p1Pos.z, p2Pos.z));
+            hy = Sqrt(Pow(gk, 2) + Pow(ak, 2));
+            alpha = Asin(gk / hy);
             fov = Mathf.Rad2Deg * (float) alpha * 2;
         }
-        print("FOV: " + fov);
-        print("Camera FOV: " + Camera.main.fieldOfView);
         return fov;
     }
-
+    
+    /// <summary>
+    /// Ease In Sine function for camera zoom
+    /// </summary>
+    /// <param name="start">
+    /// Actual FOV of the camera
+    /// </param>
+    /// <param name="end">
+    /// Desired fov for the camera
+    /// </param>
+    /// <param name="value">
+    /// Value between 0 and 1
+    /// </param>
+    /// <returns>
+    /// FOV between start and end based on value
+    /// </returns>
     private float easeInSine(float start, float end, float value)
     {
         return (end - start) * 0.5f * (1f + Mathf.Sin(value * Mathf.PI * 0.5f)) + start;
     }
     
+    
+    /// <summary>
+    /// Ease In Sine function for camera zoom
+    /// </summary>
+    /// <param name="start">
+    /// Actual FOV of the camera
+    /// </param>
+    /// <param name="end">
+    /// Desired fov for the camera
+    /// </param>
+    /// <param name="value">
+    /// Value between 0 and 1
+    /// </param>
+    /// <returns>
+    /// FOV between start and end based on value
+    /// </returns>
     private float easeOutSine(float start, float end, float value)
     {
         return (end - start) * 0.5f * (1f - Mathf.Sin(value * Mathf.PI * 0.5f)) + start;
@@ -140,43 +186,43 @@ public class CameraMovement : MonoBehaviour
     void Update()
     {
         player1 = GameObject.Find("Player");
-        if (checkCoop())
+        if (CheckCoop())
         {
             player2 = GameObject.Find("Player2");
             //create list of players
-            List<GameObject> Players = new List<GameObject>();
-            Players.Add(player1);
-            Players.Add(player2);
-
+            var players = new []{player1, player2};
+            
+            //get the middle position of the players
             middleVec = (player1.transform.position + player2.transform.position) / 2;
             middleVec.y += cameraFix;
             middleVec.z = Camera.main.transform.position.z;
             Camera.main.transform.position = middleVec;
-            float fov = calcFOV(player1, player2);
-            if (fov >= minFOV && fov <= MaxFOV)
+            var fov = CalcFOV(player1, player2);
+            if (fov >= minFOV && fov <= maxFOV)
             {
                 var fps = 1f / Time.deltaTime;
-                var cam = Camera.main;
-                if (fov > cam.fieldOfView)
+                if (fov > Camera.main.fieldOfView)
                 {
+                    //increase camera FOV
                     for (var i = 0f; i <= 1f; i += 0.001f)
                     {
-                        cam.fieldOfView = easeInSine(cam.fieldOfView, fov, i);
+                        Camera.main.fieldOfView = easeInSine(Camera.main.fieldOfView, fov, i);
                     }
                 }
-                else if (fov < cam.fieldOfView)
+                else if (fov < Camera.main.fieldOfView)
                 {
+                    //decrease camera FOV
                     for (var i = 1f; i >= 0f; i -= 0.001f)
                     {
-                        cam.fieldOfView = easeOutSine(cam.fieldOfView, fov, i);
+                        Camera.main.fieldOfView = easeOutSine(Camera.main.fieldOfView, fov, i);
                     }
                 }
             }
 
             //iterate through players
-            foreach (var Player in Players)
+            foreach (var player in players)
             {
-                StopPlayer(Player);
+                StopPlayer(player);
             }
         }
         else
