@@ -43,7 +43,7 @@ public class CameraMovement : MonoBehaviour
             middleVec.z = Camera.main.transform.position.z;
             middleVec.y += cameraFix;
             Camera.main.transform.position = middleVec;
-            minFOV = Camera.main.fieldOfView;
+            minFOV = Camera.main.fieldOfView + 5f;
         }
         else
         {
@@ -105,7 +105,7 @@ public class CameraMovement : MonoBehaviour
         var p2Pos = P2.transform.position;
         if (Max(p1Pos.y, p2Pos.y) > Camera.main.rect.yMax)
         {
-            float GK = Abs(Abs(p1Pos.y) - Abs(p2Pos.y));
+            float GK = Abs(Abs(p1Pos.y) - Abs(p2Pos.y)) + 3f;
             float aspectRatio = GK / Max(p1Pos.x, p2Pos.x);
             float AK = Abs(Camera.main.transform.position.z - Max(p1Pos.z, p2Pos.z));
             double HY = Sqrt(Pow(GK, 2) + Pow(AK, 2));
