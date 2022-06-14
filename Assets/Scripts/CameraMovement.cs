@@ -6,7 +6,7 @@ using UnityEngine;
 /// </summary>
 public class CameraMovement : MonoBehaviour
 {
-    [SerializeField] private float maxFOV = 20f;
+    [SerializeField] private float maxFOV = 25f;
     [SerializeField] private float expandColliderBox = 3.75f;
     private GameObject player1;
 
@@ -40,7 +40,6 @@ public class CameraMovement : MonoBehaviour
             middleVec.y += cameraFix;
             Camera.main.transform.position = middleVec;
             minFOV = Camera.main.fieldOfView;
-            Camera.main.fieldOfView = minFOV;
         }
         else
         {
@@ -120,7 +119,7 @@ public class CameraMovement : MonoBehaviour
 
         if (Max(p1Pos.y, p2Pos.y) > Camera.main.rect.yMax)
         {
-            gk = Abs(Abs(p1Pos.y) - Abs(p2Pos.y));
+            gk = Abs(Abs(p1Pos.y) - Abs(p2Pos.y)) + 2f;
             var aspectRatio = gk / Max(p1Pos.x, p2Pos.x);
             ak = Abs(Camera.main.transform.position.z - Max(p1Pos.z, p2Pos.z));
             hy = Sqrt(Pow(gk, 2) + Pow(ak, 2));
