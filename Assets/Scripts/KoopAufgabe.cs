@@ -8,7 +8,19 @@ public class KoopAufgabe : MonoBehaviour
 {
     
     private bool btnPressed = false;
-    
+
+    private bool isCoop;
+
+    private void Start()
+    {
+        isCoop = ToggleCoop.instance.Equals(null);
+        if (!isCoop)
+        {
+            //disable the button
+            GameObject.Find("CoopAufgabe").SetActive(false);
+        }
+    }
+
     private void PushButton()
     {
         transform.position -= new Vector3(0, 0.1f, 0);
