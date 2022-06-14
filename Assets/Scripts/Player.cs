@@ -124,9 +124,6 @@ public class Player : MonoBehaviour
         else if (isGrounded && !isJumping)
         {
             state = State.Idle;
-        } else
-        {
-            state = State.Jumping;
         }
 
         rb.velocity = Vector3.Lerp(rb.velocity, move, 1f);
