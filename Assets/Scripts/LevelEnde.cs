@@ -10,6 +10,7 @@ public class LevelEnde : MonoBehaviour
     {
         if (other.gameObject.tag.Equals("Player")) {
             Debug.Log("Level Ende");
+            SceneManager.LoadScene("Menu");
             Highscore.SetActive(true);
         }
      }
