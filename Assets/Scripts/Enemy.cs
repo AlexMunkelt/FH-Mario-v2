@@ -26,7 +26,7 @@ public class Enemy : MonoBehaviour
 
         if (go.tag.Equals("Player"))
         {
-            if (go.transform.position.y > this.transform.position.y + 1)
+            if (go.transform.position.y > this.transform.position.y + 0.5f)
             {
                 go.GetComponent<Player>().Jump(go.GetComponent<Player>().jumpOnEnemyMult);
                 Death();
