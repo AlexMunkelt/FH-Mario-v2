@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 public class LevelEnde : MonoBehaviour
 {
     public GameObject Highscore;
-    void OnCollisionEnter(Collision other)
+    void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag.Equals("Player")) {
             Debug.Log("Level Ende");
