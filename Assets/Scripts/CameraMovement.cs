@@ -1,5 +1,7 @@
+using System;
 using static System.Math;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 /// <summary>
 /// Class that handles the camera movement and zoom.
@@ -71,29 +73,38 @@ public class CameraMovement : MonoBehaviour
     /// </param>
     private void StopPlayer(GameObject player)
     {
+        Camera cam;
+        Vector3 camPos, playerPos;
+        
         //when player is at the right edge of the screen
         if (player.transform.position.x > Camera.main.transform.position.x + 
             Camera.main.orthographicSize + expandColliderBox)
         {
+            cam = Camera.main;
+            camPos = cam.transform.position;
+            playerPos = player.transform.position;
             //lock position of camera
             Camera.main.transform.position = cameraPos;
             
             //get max x position of the camera view
-            var maxX = Camera.main.transform.position.x + Camera.main.orthographicSize + expandColliderBox;
+            var maxX = camPos.x + cam.orthographicSize + expandColliderBox;
             //prevent player from moving to right
-            player.transform.position = new Vector3(maxX, player.transform.position.y, player.transform.position.z);
+            player.transform.position = new Vector3(maxX, playerPos.y, playerPos.z);
             
         }
         //when player is at the left edge of the screen
         else if (player.transform.position.x < Camera.main.transform.position.x -
                  Camera.main.orthographicSize - expandColliderBox)
         {
+            cam = Camera.main;
+            camPos = cam.transform.position;
+            playerPos = player.transform.position;
             //lock position of camera
             Camera.main.transform.position = cameraPos;
             //get min x position of the camera view
-            var minX = Camera.main.transform.position.x - Camera.main.orthographicSize - expandColliderBox;
+            var minX = camPos.x - cam.orthographicSize - expandColliderBox;
             //prevent player from moving to left
-            player.transform.position = new Vector3(minX, player.transform.position.y, player.transform.position.z);
+            player.transform.position = new Vector3(minX, playerPos.y, playerPos.z);
         }
         else
         {
@@ -115,25 +126,27 @@ public class CameraMovement : MonoBehaviour
     /// </returns>
     private float CalcFOV(GameObject p1, GameObject p2)
     {
+        //draw a line at camera's rectangle
         float fov, gk, ak;
         double hy, alpha;
         var p1Pos = p1.transform.position;
         var p2Pos = p2.transform.position;
+        var cam = Camera.main;
+        var camPos = cam.transform.position;
 
-        if (Max(p1Pos.y, p2Pos.y) > Camera.main.rect.yMax)
+        if (Max(p1Pos.y, p2Pos.y) > Min(p1Pos.y, p2Pos.y) + 1.9f)
         {
-            gk = Abs(Abs(p1Pos.y) - Abs(p2Pos.y)) + 2f;
-            var aspectRatio = gk / Max(p1Pos.x, p2Pos.x);
-            ak = Abs(Camera.main.transform.position.z - Max(p1Pos.z, p2Pos.z));
+            gk = Max(p1Pos.y, p2Pos.y) - Min(p1Pos.y, p2Pos.y);
+            ak = Abs(camPos.z - Max(p1Pos.z, p2Pos.z));
             hy = Sqrt(Pow(gk, 2) + Pow(ak, 2));
             alpha = Asin(gk / hy);
             fov = Mathf.Rad2Deg * (float) alpha * 2;
-            fov = Camera.VerticalToHorizontalFieldOfView(fov, aspectRatio);
+            fov = Camera.VerticalToHorizontalFieldOfView(fov, cam.aspect);
         }
         else
         {
             gk = Abs(Abs(p1Pos.x) - Abs(p2Pos.x));
-            ak = Abs(Camera.main.transform.position.z - Max(p1Pos.z, p2Pos.z));
+            ak = Abs(camPos.z - Max(p1Pos.z, p2Pos.z));
             hy = Sqrt(Pow(gk, 2) + Pow(ak, 2));
             alpha = Asin(gk / hy);
             fov = Mathf.Rad2Deg * (float) alpha * 2;
@@ -181,7 +194,25 @@ public class CameraMovement : MonoBehaviour
     {
         return (end - start) * 0.5f * (1f - Mathf.Sin(value * Mathf.PI * 0.5f)) + start;
     }
-    
+
+    private void FixedUpdate()
+    {
+        //get bottom edge of the screen
+        var ground = GameObject.Find("Ground").transform.position;
+        var p1Pos = player1.transform.position;
+        var p2Pos = player2.transform.position;
+        var camrect = Camera.main.rect;
+        var campos = Camera.main.transform.position;
+        p1Pos.y += 1.9f;
+        p2Pos.y += 1.9f;
+        Debug.DrawLine(p1Pos, p2Pos, Color.red, 0);
+        Debug.DrawLine(p1Pos, new Vector2(p1Pos.x, Screen.height), Color.magenta, 0);
+        Debug.DrawLine(p2Pos, new Vector2(p2Pos.x, Screen.height), Color.magenta, 0);
+        Debug.DrawLine(p1Pos, new Vector3(p1Pos.x, ground.y, p1Pos.z), Color.yellow, 0);
+        Debug.DrawLine(p2Pos, new Vector3(p2Pos.x, ground.y, p2Pos.z), Color.yellow, 0);
+        //Debug.DrawLine(p1Pos, campos, Color.magenta, 0);
+    }
+
     // Update is called once per frame
     void Update()
     {
