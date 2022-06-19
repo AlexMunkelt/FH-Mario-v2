@@ -13,6 +13,7 @@ public class Highscore : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Time.timeScale = 0;
         healthBar.SetActive(false);
         WriteScore();
     }
@@ -27,6 +28,7 @@ public class Highscore : MonoBehaviour
     {
         SceneManager.UnloadSceneAsync("Level1");
         SceneManager.LoadScene("Menu");
+        Time.timeScale = 1;
     }
 
     private void WriteScore()
