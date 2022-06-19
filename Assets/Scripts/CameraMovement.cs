@@ -126,7 +126,6 @@ public class CameraMovement : MonoBehaviour
     /// </returns>
     private float CalcFOV(GameObject p1, GameObject p2)
     {
-        //draw a line at camera's rectangle
         float fov, gk, ak;
         double hy, alpha;
         var p1Pos = p1.transform.position;
@@ -195,7 +194,7 @@ public class CameraMovement : MonoBehaviour
         return (end - start) * 0.5f * (1f - Mathf.Sin(value * Mathf.PI * 0.5f)) + start;
     }
 
-    private void FixedUpdate()
+    /*private void FixedUpdate()
     {
         //get bottom edge of the screen
         var ground = GameObject.Find("Ground").transform.position;
@@ -211,7 +210,7 @@ public class CameraMovement : MonoBehaviour
         Debug.DrawLine(p1Pos, new Vector3(p1Pos.x, ground.y, p1Pos.z), Color.yellow, 0);
         Debug.DrawLine(p2Pos, new Vector3(p2Pos.x, ground.y, p2Pos.z), Color.yellow, 0);
         //Debug.DrawLine(p1Pos, campos, Color.magenta, 0);
-    }
+    }*/
 
     // Update is called once per frame
     void Update()
@@ -228,16 +227,17 @@ public class CameraMovement : MonoBehaviour
             middleVec.y += cameraFix;
             middleVec.z = Camera.main.transform.position.z;
             Camera.main.transform.position = middleVec;
+            var camfov = Camera.main.fieldOfView;
             var fov = CalcFOV(player1, player2);
             if (fov >= minFOV && fov <= maxFOV)
             {
                 var fps = 1f / Time.deltaTime;
-                if (fov > Camera.main.fieldOfView)
+                if (fov > camfov)
                 {
                     //increase camera FOV
                     for (var i = 0f; i <= 1f; i += 0.001f)
                     {
-                        Camera.main.fieldOfView = easeInSine(Camera.main.fieldOfView, fov, i);
+                        Camera.main.fieldOfView = easeInSine(camfov, fov, i);
                     }
                 }
                 else if (fov < Camera.main.fieldOfView)
@@ -245,7 +245,7 @@ public class CameraMovement : MonoBehaviour
                     //decrease camera FOV
                     for (var i = 1f; i >= 0f; i -= 0.001f)
                     {
-                        Camera.main.fieldOfView = easeOutSine(Camera.main.fieldOfView, fov, i);
+                        Camera.main.fieldOfView = easeOutSine(camfov, fov, i);
                     }
                 }
             }
