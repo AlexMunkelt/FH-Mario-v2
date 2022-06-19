@@ -2,6 +2,7 @@ using System;
 using static System.Math;
 using UnityEngine;
 using UnityEngine.UIElements;
+using Object = UnityEngine.Object;
 
 /// <summary>
 /// Class that handles the camera movement and zoom.
@@ -21,6 +22,8 @@ public class CameraMovement : MonoBehaviour
     private float minFOV;
 
     private float cameraFix;
+    
+    private bool verticalfov = false;
     
     bool CheckCoop()
     {
@@ -150,6 +153,7 @@ public class CameraMovement : MonoBehaviour
             alpha = Asin(gk / hy);
             fov = Mathf.Rad2Deg * (float) alpha * 2;
         }
+
         return fov;
     }
     
@@ -193,6 +197,46 @@ public class CameraMovement : MonoBehaviour
     {
         return (end - start) * 0.5f * (1f - Mathf.Sin(value * Mathf.PI * 0.5f)) + start;
     }
+    
+    /// <summary>
+    /// Ease In Quad function for camera zoom
+    /// </summary>
+    /// <param name="start">
+    /// Actual FOV of the camera
+    /// </param>
+    /// <param name="end">
+    /// Desired fov for the camera
+    /// </param>
+    /// <param name="value">
+    /// Value between 0 and 1
+    /// </param>
+    /// <returns>
+    /// FOV between start and end based on value
+    /// </returns>
+    private float easeOutQuad(float start, float end, float value)
+    {
+        return -(end - start) * value * (value - 2) + start;
+    }
+    
+    /// <summary>
+    /// Ease Out Quad function for camera zoom
+    /// </summary>
+    /// <param name="start">
+    /// Actual FOV of the camera
+    /// </param>
+    /// <param name="end">
+    /// Desired fov for the camera
+    /// </param>
+    /// <param name="value">
+    /// Value between 0 and 1
+    /// </param>
+    /// <returns>
+    /// FOV between start and end based on value
+    /// </returns>
+    private float easeInQuad(float start, float end, float value)
+    {
+        return (end - start) * value * value + start;
+    }
 
     /*private void FixedUpdate()
     {
@@ -207,8 +251,8 @@ public class CameraMovement : MonoBehaviour
         Debug.DrawLine(p1Pos, p2Pos, Color.red, 0);
         Debug.DrawLine(p1Pos, new Vector2(p1Pos.x, Screen.height), Color.magenta, 0);
         Debug.DrawLine(p2Pos, new Vector2(p2Pos.x, Screen.height), Color.magenta, 0);
-        Debug.DrawLine(p1Pos, new Vector3(p1Pos.x, ground.y, p1Pos.z), Color.yellow, 0);
-        Debug.DrawLine(p2Pos, new Vector3(p2Pos.x, ground.y, p2Pos.z), Color.yellow, 0);
+        Debug.DrawLine(p1Pos, new Vector3(p1Pos.x, ground.y, p1Pos.z), Color.blue, 0);
+        Debug.DrawLine(p2Pos, new Vector3(p2Pos.x, ground.y, p2Pos.z), Color.blue, 0);
         //Debug.DrawLine(p1Pos, campos, Color.magenta, 0);
     }*/
 
@@ -231,13 +275,12 @@ public class CameraMovement : MonoBehaviour
             var fov = CalcFOV(player1, player2);
             if (fov >= minFOV && fov <= maxFOV)
             {
-                var fps = 1f / Time.deltaTime;
                 if (fov > camfov)
                 {
                     //increase camera FOV
                     for (var i = 0f; i <= 1f; i += 0.001f)
                     {
-                        Camera.main.fieldOfView = easeInSine(camfov, fov, i);
+                        Camera.main.fieldOfView = easeInQuad(camfov, fov, i);
                     }
                 }
                 else if (fov < Camera.main.fieldOfView)
@@ -245,7 +288,7 @@ public class CameraMovement : MonoBehaviour
                     //decrease camera FOV
                     for (var i = 1f; i >= 0f; i -= 0.001f)
                     {
-                        Camera.main.fieldOfView = easeOutSine(camfov, fov, i);
+                        Camera.main.fieldOfView = easeOutQuad(camfov, fov, i);
                     }
                 }
             }
