@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class PauseGame : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class PauseGame : MonoBehaviour
     public Player player1, player2;
     public GameObject levelMusic;
     public GameObject pauseMusic;
+    public Button selectedButton;
     private bool GameIsPaused = false;
     // Start is called before the first frame update
     void Start()
@@ -41,6 +43,7 @@ public class PauseGame : MonoBehaviour
         player1.canMove = false;
         levelMusic.SetActive(false);
         pauseMusic.SetActive(true);
+        selectedButton.Select();
     }
     public void doResumeGame()
     {

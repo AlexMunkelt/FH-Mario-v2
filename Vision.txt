@@ -1,0 +1,22 @@
+# Produktvision
+
+Sidescoller im Super Mario Stil
+
+Zielgruppe: FH-Studenten
+Bedürfniss: 
+    - Anfänger freundliches Tutorial
+    - ansteigender Schwierigkeitsgrad
+Platform: PC
+
+Produkt soll unterhaltungs Wert haben
+
+Produktgernzen:
+    - lokal co-op (bis zu 2-Player)
+    - 2,5 d jum & run side scroller
+
+Stakeholder:
+    - Kunden (Kim P. B., Alexander B & Jacky)
+    - User
+
+Minimum Viable Product
+    - Ein Level, dass vom Spieler abgeschlossen werden kann
