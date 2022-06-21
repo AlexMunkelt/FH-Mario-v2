@@ -135,7 +135,6 @@ public class CameraMovement : MonoBehaviour
             alpha = Asin(gk / hy);
             fov = Mathf.Rad2Deg * (float) alpha * 2;
             fov = Camera.VerticalToHorizontalFieldOfView(fov, cam.aspect);
-            maxFOV = 60f;
         }
         else
         {
@@ -144,7 +143,6 @@ public class CameraMovement : MonoBehaviour
             hy = Sqrt(Pow(gk, 2) + Pow(ak, 2));
             alpha = Asin(gk / hy);
             fov = Mathf.Rad2Deg * (float) alpha * 2;
-            maxFOV = 40f;
         }
 
         return fov;
@@ -228,7 +226,7 @@ public class CameraMovement : MonoBehaviour
     /// </returns>
     private float easeInQuad(float start, float end, float value)
     {
-        return 0f;
+        return (end - start) * value * value + start;
     }
 
     private void FixedUpdate()
@@ -269,25 +267,23 @@ public class CameraMovement : MonoBehaviour
             Camera.main.transform.position = middleVec;
             var camfov = Camera.main.fieldOfView;
             var fov = CalcFOV(player1, player2);
-            if (fov >= minFOV && fov <= maxFOV || fov > maxFOV)
+            if (fov >= minFOV && fov <= maxFOV)
             {
-                if (fov > Camera.main.fieldOfView)
+                if (fov > camfov)
                 {
-                    Camera.main.fieldOfView = Mathf.Lerp(camfov, fov, Time.deltaTime * Max(player1.GetComponent<Player>().speed, player2.GetComponent<Player>().speed));
                     //increase camera FOV
-                    /*for (var i = 0f; i <= 1f; i += 0.001f)
+                    for (var i = 0f; i <= 1f; i += 0.001f)
                     {
                         Camera.main.fieldOfView = easeInQuad(camfov, fov, i);
-                    }*/
+                    }
                 }
                 else if (fov < Camera.main.fieldOfView)
                 {
-                    Camera.main.fieldOfView = Mathf.Lerp(camfov, fov, Time.deltaTime);
                     //decrease camera FOV
-                    /*for (var i = 1f; i >= 0f; i -= 0.001f)
+                    for (var i = 1f; i >= 0f; i -= 0.001f)
                     {
                         Camera.main.fieldOfView = easeOutQuad(camfov, fov, i);
-                    }*/
+                    }
                 }
             }
 
