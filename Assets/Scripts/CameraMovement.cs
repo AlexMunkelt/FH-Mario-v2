@@ -1,4 +1,5 @@
 using System;
+using UnityEditor;
 using static System.Math;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -37,7 +38,6 @@ public class CameraMovement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        AddCollider();
         player1 = GameObject.Find("Player");
         if (CheckCoop())
         {
@@ -57,15 +57,6 @@ public class CameraMovement : MonoBehaviour
             tmp.z = Camera.main.transform.position.z;
             Camera.main.transform.position = tmp;
         }
-    }
-
-    // add collider to the camera
-    private void AddCollider()
-    {
-        var collider = gameObject.AddComponent<BoxCollider>();
-        collider.isTrigger = true;
-        collider.size = new Vector3(Camera.main.orthographicSize * 2, Camera.main.orthographicSize * 2, 1);
-        collider.center = new Vector3(0, 0, 0);
     }
 
     /// <summary>
@@ -238,7 +229,7 @@ public class CameraMovement : MonoBehaviour
         return (end - start) * value * value + start;
     }
 
-    /*private void FixedUpdate()
+    private void FixedUpdate()
     {
         //get bottom edge of the screen
         var ground = GameObject.Find("Ground").transform.position;
@@ -248,13 +239,16 @@ public class CameraMovement : MonoBehaviour
         var campos = Camera.main.transform.position;
         p1Pos.y += 1.9f;
         p2Pos.y += 1.9f;
-        Debug.DrawLine(p1Pos, p2Pos, Color.red, 0);
-        Debug.DrawLine(p1Pos, new Vector2(p1Pos.x, Screen.height), Color.magenta, 0);
-        Debug.DrawLine(p2Pos, new Vector2(p2Pos.x, Screen.height), Color.magenta, 0);
-        Debug.DrawLine(p1Pos, new Vector3(p1Pos.x, ground.y, p1Pos.z), Color.blue, 0);
-        Debug.DrawLine(p2Pos, new Vector3(p2Pos.x, ground.y, p2Pos.z), Color.blue, 0);
+        //Debug.DrawLine(p1Pos, p2Pos, Color.red, 0);
+        //Debug.DrawLine(p1Pos, new Vector2(p1Pos.x, Screen.height), Color.magenta, 0);
+        //Debug.DrawLine(p2Pos, new Vector2(p2Pos.x, Screen.height), Color.magenta, 0);
+        //Debug.DrawLine(p1Pos, new Vector3(p1Pos.x, ground.y, p1Pos.z), Color.blue, 0);
+        //Debug.DrawLine(p2Pos, new Vector3(p2Pos.x, ground.y, p2Pos.z), Color.blue, 0);
+        //get vector between players
+
+
         //Debug.DrawLine(p1Pos, campos, Color.magenta, 0);
-    }*/
+    }
 
     // Update is called once per frame
     void Update()
@@ -295,7 +289,7 @@ public class CameraMovement : MonoBehaviour
 
             //iterate through players
             foreach (var player in players)
-            {
+            { 
                 StopPlayer(player);
             }
         }
