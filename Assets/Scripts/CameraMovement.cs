@@ -100,6 +100,7 @@ public class CameraMovement : MonoBehaviour
         var p2Pos = P2.transform.position;
         if (Max(p1Pos.y, p2Pos.y) > Camera.main.rect.yMax)
         {
+<<<<<<< Updated upstream
             float GK = Abs(Abs(p1Pos.y) - Abs(p2Pos.y));
             float aspectRatio = GK / Max(p1Pos.x, p2Pos.x);
             float AK = Abs(Camera.main.transform.position.z - Max(p1Pos.z, p2Pos.z));
@@ -107,6 +108,16 @@ public class CameraMovement : MonoBehaviour
             double alpha = Asin(GK / HY);
             fov = Mathf.Rad2Deg * (float) alpha * 2;
             fov = Camera.VerticalToHorizontalFieldOfView(fov, aspectRatio);
+=======
+            gk = Max(p1Pos.y, p2Pos.y) - Min(p1Pos.y, p2Pos.y);
+            gk /= 2f;
+            ak = Abs(camPos.z - Max(p1Pos.z, p2Pos.z));
+            hy = Sqrt(Pow(gk, 2) + Pow(ak, 2));
+            alpha = Asin(gk / hy);
+            //calculate aspect ratio
+            fov = (float) (2 * alpha * 180 / PI);
+            fov = Camera.VerticalToHorizontalFieldOfView(fov, cam.aspect);
+>>>>>>> Stashed changes
         }
         else
         {
@@ -163,7 +174,11 @@ public class CameraMovement : MonoBehaviour
                 {
                     for (var i = 1f; i >= 0f; i -= 0.001f)
                     {
+<<<<<<< Updated upstream
                         cam.fieldOfView = easeOutSine(cam.fieldOfView, fov, i);
+=======
+                        Camera.main.fieldOfView = easeOutQuad(fov, camfov, i);
+>>>>>>> Stashed changes
                     }
                 }
             }
