@@ -191,7 +191,8 @@ public class Player : MonoBehaviour
                     canJump = false;
                     Jump();
                 }
-                else if (canDoubleJump && !isDoubleJumping)
+                
+                if (canDoubleJump && !isDoubleJumping && !isGrounded)
                 {
                     canJump = false;
                     isDoubleJumping = true;
@@ -207,7 +208,8 @@ public class Player : MonoBehaviour
                     canJump = false;
                     Jump();
                 }
-                else if (canDoubleJump && !isDoubleJumping)
+
+                if (canDoubleJump && !isDoubleJumping && !isGrounded)
                 {
                     canJump = false;
                     isDoubleJumping = true;
