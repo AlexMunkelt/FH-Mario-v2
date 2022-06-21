@@ -10,11 +10,28 @@ public class KoopAufgabe : MonoBehaviour
     private bool isOpen = false;
     public bool btn1isPressed = false;
     public bool btn2isPressed = false;
+    
+    bool CheckCoop()
+    {
+        if (ToggleCoop.instance == null)
+        {
+            return true;
+        }
+        return ToggleCoop.instance.coop;
+    }
+    
     // Start is called before the first frame update
     void Start()
     {
         door1 = GameObject.Find("Door");
         door2 = GameObject.Find("Door2");
+        if(!CheckCoop())
+        {
+            door1.SetActive(false);
+            door2.SetActive(false);
+            GameObject.Find("Btn1").SetActive(false);
+            GameObject.Find("Btn2").SetActive(false);
+        }
     }
 
     // Update is called once per frame
